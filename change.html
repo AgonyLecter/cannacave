@@ -204,31 +204,12 @@
             loadStrains(category);
         }
 
-        function addStrain(category) {
-            const name = document.getElementById(`${category}-name`).value;
-            const price = document.getElementById(`${category}-price`).value;
-            if (name && price) {
-                firebase.database().ref(`${category}`).push({
-                    name: name,
-                    price: parseInt(price)
-                }).then(() => {
-                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain added successfully!`);
-                    document.getElementById(`${category}-name`).value = '';
-                    document.getElementById(`${category}-price`).value = '';
-                    loadStrains(category);
-                }).catch((error) => {
-                    showToast("Error adding strain: " + error.message);
-                });
-            } else {
-                showToast("Please enter both the strain name and the price.");
-            }
-        }
-
         function loadStrains(category) {
             const strainList = document.getElementById(`${category}-list`);
             strainList.innerHTML = '<h3>Existing Strains</h3>';
-            firebase.database().ref(category).once("value", (snapshot) => {
+            firebase.database().ref(category).on("value", (snapshot) => {
                 const data = snapshot.val();
+                strainList.innerHTML = '<h3>Existing Strains</h3>';  // Re-clear list to ensure it's fresh
                 if (data) {
                     for (let key in data) {
                         const item = data[key];
@@ -243,9 +224,28 @@
                 } else {
                     strainList.innerHTML += `<p>No strains found in ${category}.</p>`;
                 }
-            }).catch((error) => {
+            }, (error) => {
                 showToast("Error loading strains: " + error.message);
             });
+        }
+
+        function addStrain(category) {
+            const name = document.getElementById(`${category}-name`).value;
+            const price = document.getElementById(`${category}-price`).value;
+            if (name && price) {
+                firebase.database().ref(`${category}`).push({
+                    name: name,
+                    price: parseInt(price)
+                }).then(() => {
+                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain added successfully!`);
+                    document.getElementById(`${category}-name`).value = '';
+                    document.getElementById(`${category}-price`).value = '';
+                }).catch((error) => {
+                    showToast("Error adding strain: " + error.message);
+                });
+            } else {
+                showToast("Please enter both the strain name and the price.");
+            }
         }
 
         function updateStrain(category, key) {
@@ -269,7 +269,6 @@
             firebase.database().ref(`${category}/${key}`).remove()
             .then(() => {
                 showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain deleted successfully!`);
-                loadStrains(category);
             }).catch((error) => {
                 showToast("Error deleting strain: " + error.message);
             });
@@ -289,6 +288,7 @@
 </body>
 
 </html>
+
 
 
 
