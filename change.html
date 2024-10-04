@@ -211,11 +211,14 @@
                 firebase.database().ref(`${category}`).push({
                     name: name,
                     price: parseInt(price)
+                }).then(() => {
+                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain added successfully!`);
+                    document.getElementById(`${category}-name`).value = '';
+                    document.getElementById(`${category}-price`).value = '';
+                    loadStrains(category);
+                }).catch((error) => {
+                    showToast("Error adding strain: " + error.message);
                 });
-                showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain added successfully!`);
-                document.getElementById(`${category}-name`).value = '';
-                document.getElementById(`${category}-price`).value = '';
-                loadStrains(category);
             } else {
                 showToast("Please enter both the strain name and the price.");
             }
@@ -223,20 +226,25 @@
 
         function loadStrains(category) {
             const strainList = document.getElementById(`${category}-list`);
-            strainList.innerHTML = '';
-            firebase.database().ref(category).on("value", (snapshot) => {
-                strainList.innerHTML = '<h3>Existing Strains</h3>';
+            strainList.innerHTML = '<h3>Existing Strains</h3>';
+            firebase.database().ref(category).once("value", (snapshot) => {
                 const data = snapshot.val();
-                for (let key in data) {
-                    const item = data[key];
-                    strainList.innerHTML += `
-                        <div>
-                            <input type="text" value="${item.name}" id="${category}-${key}-name" placeholder="Strain name">
-                            <input type="number" value="${item.price}" id="${category}-${key}-price" placeholder="Price">
-                            <button class="update-button" onclick="updateStrain('${category}', '${key}')">Update</button>
-                            <button class="delete-button" onclick="deleteStrain('${category}', '${key}')">Delete</button>
-                        </div>`;
+                if (data) {
+                    for (let key in data) {
+                        const item = data[key];
+                        strainList.innerHTML += `
+                            <div>
+                                <input type="text" value="${item.name}" id="${category}-${key}-name" placeholder="Strain name">
+                                <input type="number" value="${item.price}" id="${category}-${key}-price" placeholder="Price">
+                                <button class="update-button" onclick="updateStrain('${category}', '${key}')">Update</button>
+                                <button class="delete-button" onclick="deleteStrain('${category}', '${key}')">Delete</button>
+                            </div>`;
+                    }
+                } else {
+                    strainList.innerHTML += `<p>No strains found in ${category}.</p>`;
                 }
+            }).catch((error) => {
+                showToast("Error loading strains: " + error.message);
             });
         }
 
@@ -247,17 +255,24 @@
                 firebase.database().ref(`${category}/${key}`).set({
                     name: name,
                     price: parseInt(price)
+                }).then(() => {
+                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain updated successfully!`);
+                }).catch((error) => {
+                    showToast("Error updating strain: " + error.message);
                 });
-                showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain updated successfully!`);
             } else {
                 showToast("Please enter both the strain name and the price.");
             }
         }
 
         function deleteStrain(category, key) {
-            firebase.database().ref(`${category}/${key}`).remove();
-            showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain deleted successfully!`);
-            loadStrains(category);
+            firebase.database().ref(`${category}/${key}`).remove()
+            .then(() => {
+                showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain deleted successfully!`);
+                loadStrains(category);
+            }).catch((error) => {
+                showToast("Error deleting strain: " + error.message);
+            });
         }
 
         function showToast(message) {
@@ -274,6 +289,7 @@
 </body>
 
 </html>
+
 
 
 
