@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canna Club Menu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden;
+            color: #fff;
+        }
+        .menu-background video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+        .menu-container {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            backdrop-filter: blur(2px);
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .header h1 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 3rem;
+            color: #228B22;
+            text-transform: uppercase;
+        }
+        .menu-grid {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .menu-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            width: 28%;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            color: #1b1b1b;
+        }
+        .menu-section h2 {
+            font-size: 2.2rem;
+            font-family: 'Fjalla One', sans-serif;
+            margin-bottom: 15px;
+            color: #228B22;
+        }
+        .menu-section p {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            color: #fff;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+            to {
+                bottom: 30px;
+                opacity: 1;
+            }
+        }
+        @keyframes fadeout {
+            from {
+                bottom: 30px;
+                opacity: 1;
+            }
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+        @media (max-width: 1200px) {
+            .menu-section {
+                width: 45%;
+            }
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .menu-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+            .menu-section {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+            .footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-background">
+        <video autoplay muted loop>
+            <source src="1004.mp4" type="video/mp4">
+        </video>
+        <div class="menu-container">
+            <div class="header">
+                <h1>The Canna Cave</h1>
+            </div>
+            <div class="menu-grid">
+                <div class="menu-section" id="indica-section">
+                    <h2>Indica</h2>
+                    <p>Loading...</p>
+                </div>
+                <div class="menu-section" id="sativa-section">
+                    <h2>Sativa</h2>
+                    <p>Loading...</p>
+                </div>
+                <div class="menu-section" id="hybrid-section">
+                    <h2>Hybrid</h2>
+                    <p>Loading...</p>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="menu-section" id="cali-packs-section">
+                    <h2>Cali Packs</h2>
+                    <p>Loading...</p>
+                </div>
+                <div class="menu-section" id="loose-cali-section">
+                    <h2>Loose Cali</h2>
+                    <p>Loading...</p>
+                </div>
+                <div class="menu-section" id="other-section">
+                    <h2>Other</h2>
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
+            authDomain: "wandernatureconnect.firebaseapp.com",
+            databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "wandernatureconnect",
+            storageBucket: "wandernatureconnect.appspot.com",
+            messagingSenderId: "1062563433646",
+            appId: "1:1062563433646:web:a7251b914f569fc105f13f",
+            measurementId: "G-SGF0KC717J"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        function updateMenuData(sectionId, category) {
+            firebase.database().ref(category).on("value", (snapshot) => {
+                const section = document.getElementById(sectionId);
+                section.innerHTML = `<h2>${category.charAt(0).toUpperCase() + category.slice(1)}</h2>`;
+                const data = snapshot.val();
+                if (data) {
+                    for (let key in data) {
+                        const item = data[key];
+                        section.innerHTML += `<p>${item.name} - ${item.price}pts</p>`;
+                    }
+                } else {
+                    section.innerHTML += `<p>No strains available</p>`;
+                }
+            });
+        }
+        updateMenuData('indica-section', 'indica');
+        updateMenuData('sativa-section', 'sativa');
+        updateMenuData('hybrid-section', 'hybrid');
+        updateMenuData('cali-packs-section', 'caliPacks');
+        updateMenuData('loose-cali-section', 'looseCali');
+        updateMenuData('other-section', 'other');
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerHTML = message;
+            toast.className = "toast show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
