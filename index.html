@@ -13,6 +13,7 @@
         }
         body, html {
             height: 100%;
+            width: 100%;
             font-family: 'Roboto', sans-serif;
             color: #fff;
             background-color: #1b1b1b;
@@ -24,8 +25,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background-image: url('smoke.gif');
             background-size: cover;
             background-position: center center;
@@ -46,8 +47,8 @@
         }
 
         .menu-container {
-            padding: 20px;
-            max-width: 1400px;
+            padding: 5vw; /* Utilizzo di unità fluide */
+            width: 90vw; /* Il contenitore si adatta alla larghezza dello schermo */
             margin: auto;
             text-align: center;
             background-color: rgba(0, 0, 0, 0.7); /* Scurisce il contenitore per migliorare la leggibilità */
@@ -55,29 +56,31 @@
             position: relative;
             z-index: 1;
         }
+
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5vh;
         }
+
         .header h1 {
             font-family: 'Fjalla One', sans-serif;
-            font-size: 4rem;
+            font-size: 6vw; /* Testo adattabile */
             color: #00FF00; /* Verde fluo */
             text-transform: uppercase;
         }
 
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Due colonne */
-            gap: 40px;
+            grid-template-columns: repeat(2, 1fr); /* Due colonne per la disposizione */
+            gap: 4vw; /* Spaziatura fluida tra le sezioni */
         }
 
         .menu-section h2 {
-            font-size: 2rem;
+            font-size: 3vw; /* Testo delle sezioni adattabile */
             color: #00FF00; /* Verde fluo */
-            margin-bottom: 10px;
+            margin-bottom: 2vh;
             text-align: left;
-            padding-left: 15px;
+            padding-left: 1.5vw;
             text-decoration: underline;
         }
 
@@ -85,7 +88,7 @@
             list-style: none;
             padding-left: 0;
             margin: 0;
-            font-size: 1.6rem;
+            font-size: 2vw; /* Dimensione del testo fluida */
         }
 
         /* Nome e prezzo sempre allineati */
@@ -93,7 +96,7 @@
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid #fff;
-            padding: 8px 15px;
+            padding: 1vh 1.5vw;
         }
 
         .menu-list li span {
@@ -110,6 +113,19 @@
         .menu-section:nth-child(4),
         .menu-section:nth-child(5) {
             grid-column: span 2; /* Cali Packs, Loose Cali e Other in basso */
+        }
+
+        /* Rendere il testo più grande per schermi molto grandi */
+        @media (min-width: 1600px) {
+            .header h1 {
+                font-size: 5rem;
+            }
+            .menu-section h2 {
+                font-size: 3rem;
+            }
+            .menu-list li {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -217,6 +233,7 @@
 
 </body>
 </html>
+
 
 
 
