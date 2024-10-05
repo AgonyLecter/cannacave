@@ -16,12 +16,35 @@
             font-family: 'Roboto', sans-serif;
             color: #fff;
             background-color: #1b1b1b;
-            background-image: url('smoke.gif'); /* Inserimento della GIF */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed; /* Mantiene la GIF fissa mentre si scrolla */
+            overflow: hidden;
         }
+
+        /* GIF con animazione continua */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('smoke.gif');
+            background-size: cover;
+            background-position: center center;
+            animation: fadeAnimation 40s infinite linear; /* Animazione infinita */
+        }
+
+        /* Effetto di dissolvenza per la transizione continua */
+        @keyframes fadeAnimation {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
         .menu-container {
             padding: 20px;
             max-width: 1400px;
@@ -29,6 +52,8 @@
             text-align: center;
             background-color: rgba(0, 0, 0, 0.7); /* Scurisce il contenitore per migliorare la leggibilità */
             border-radius: 10px;
+            position: relative;
+            z-index: 1;
         }
         .header {
             text-align: center;
@@ -40,39 +65,58 @@
             color: #00FF00; /* Verde fluo */
             text-transform: uppercase;
         }
+
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* Aggiunto spazio per la nuova sezione */
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr); /* Due colonne */
+            gap: 40px;
         }
-        .menu-section {
-            background-color: #333;
-            border-radius: 10px;
-            padding: 15px;
-        }
+
         .menu-section h2 {
             font-size: 2rem;
             color: #00FF00; /* Verde fluo */
             margin-bottom: 10px;
+            text-align: left;
+            padding-left: 15px;
             text-decoration: underline;
         }
-        .menu-section ul {
+
+        .menu-list {
             list-style: none;
             padding-left: 0;
+            margin: 0;
             font-size: 1.6rem;
         }
-        .menu-section ul li {
-            margin: 15px 0;
+
+        /* Nome e prezzo sempre allineati */
+        .menu-list li {
             display: flex;
             justify-content: space-between;
+            border-bottom: 1px solid #fff;
+            padding: 8px 15px;
         }
-        .menu-section ul li span {
+
+        .menu-list li span {
             color: #FFFFFF; /* Bianco acceso per i dati */
-            margin: 0 15px;
+        }
+
+        .menu-list li span.price {
+            margin-left: auto; /* Sposta il prezzo a destra */
+            font-weight: bold;
+        }
+
+        /* Ordine delle sezioni */
+        .menu-section:nth-child(3),
+        .menu-section:nth-child(4),
+        .menu-section:nth-child(5) {
+            grid-column: span 2; /* Cali Packs, Loose Cali e Other in basso */
         }
     </style>
 </head>
 <body>
+
+<!-- Contenitore per la GIF -->
+<div class="background"></div>
 
 <div class="menu-container">
     <div class="header">
@@ -80,34 +124,34 @@
     </div>
 
     <div class="menu-grid">
-        <div class="menu-section" id="indica-section">
+        <div class="menu-section">
             <h2 id="indica-title">Indica</h2>
-            <ul id="indica-list"></ul>
+            <ul class="menu-list" id="indica-list"></ul>
         </div>
 
-        <div class="menu-section" id="sativa-section">
+        <div class="menu-section">
             <h2 id="sativa-title">Sativa</h2>
-            <ul id="sativa-list"></ul>
+            <ul class="menu-list" id="sativa-list"></ul>
         </div>
 
-        <div class="menu-section" id="hybrid-section">
+        <div class="menu-section">
             <h2 id="hybrid-title">Hybrid</h2>
-            <ul id="hybrid-list"></ul>
+            <ul class="menu-list" id="hybrid-list"></ul>
         </div>
 
-        <div class="menu-section" id="calipacks-section">
+        <div class="menu-section">
             <h2 id="calipacks-title">Cali Packs</h2>
-            <ul id="calipacks-list"></ul>
+            <ul class="menu-list" id="calipacks-list"></ul>
         </div>
 
-        <div class="menu-section" id="loosecali-section">
+        <div class="menu-section">
             <h2 id="loosecali-title">Loose Cali</h2>
-            <ul id="loosecali-list"></ul>
+            <ul class="menu-list" id="loosecali-list"></ul>
         </div>
 
-        <div class="menu-section" id="other-section">
+        <div class="menu-section">
             <h2 id="other-title">Other</h2>
-            <ul id="other-list"></ul>
+            <ul class="menu-list" id="other-list"></ul>
         </div>
     </div>
 </div>
@@ -146,10 +190,10 @@
             if (data) {
                 for (let key in data) {
                     const item = data[key];
-                    sectionList.innerHTML += `<li><span>${item.name}</span> <span>${item.price} pts</span></li>`;
+                    sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
                 }
             } else {
-                sectionList.innerHTML += '<li>No strains available</li>';
+                sectionList.innerHTML += '<li><span>No strains available</span></li>';
             }
         });
     }
@@ -168,11 +212,12 @@
     loadData('hybrid-list', 'hybrid');
     loadData('calipacks-list', 'calipacks');
     loadData('loosecali-list', 'loosecali');
-    loadData('other-list', 'other'); // Aggiunta la sezione 'Other'
+    loadData('other-list', 'other');
 </script>
 
 </body>
 </html>
+
 
 
 
