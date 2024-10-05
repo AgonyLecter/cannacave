@@ -69,16 +69,18 @@
             text-transform: uppercase;
         }
 
+        /* Griglia per disporre le sezioni, adattata a 3 colonne */
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Due colonne per la disposizione */
-            gap: 4vw; /* Spaziatura fluida tra le sezioni */
+            grid-template-columns: repeat(3, 1fr); /* Tre colonne */
+            gap: 3vw; /* Spaziatura tra le sezioni */
+            align-items: start;
         }
 
         .menu-section h2 {
-            font-size: 3vw; /* Testo delle sezioni adattabile */
+            font-size: 2.5vw; /* Testo delle sezioni adattabile */
             color: #00FF00; /* Verde fluo */
-            margin-bottom: 2vh;
+            margin-bottom: 1.5vh;
             text-align: left;
             padding-left: 1.5vw;
             text-decoration: underline;
@@ -88,7 +90,7 @@
             list-style: none;
             padding-left: 0;
             margin: 0;
-            font-size: 2vw; /* Dimensione del testo fluida */
+            font-size: 1.8vw; /* Dimensione del testo fluida */
         }
 
         /* Nome e prezzo sempre allineati */
@@ -108,24 +110,9 @@
             font-weight: bold;
         }
 
-        /* Ordine delle sezioni */
-        .menu-section:nth-child(3),
-        .menu-section:nth-child(4),
-        .menu-section:nth-child(5) {
-            grid-column: span 2; /* Cali Packs, Loose Cali e Other in basso */
-        }
-
-        /* Rendere il testo più grande per schermi molto grandi */
-        @media (min-width: 1600px) {
-            .header h1 {
-                font-size: 5rem;
-            }
-            .menu-section h2 {
-                font-size: 3rem;
-            }
-            .menu-list li {
-                font-size: 2.5rem;
-            }
+        /* Cali Packs, Loose Cali e Other posizionati in basso */
+        .menu-grid div:nth-last-child(-n+3) {
+            grid-column: span 3;
         }
     </style>
 </head>
