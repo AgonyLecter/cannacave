@@ -42,6 +42,17 @@
             font-size: 1.8rem;
             color: #228B22;
             margin-bottom: 10px;
+            display: inline-block;
+        }
+        .menu-section .save-title-btn {
+            background-color: #5cb85c;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
         }
         .menu-section ul {
             list-style: none;
@@ -126,10 +137,11 @@
         <h1>Menu Management</h1>
     </div>
 
+    <!-- Section Template -->
     <div class="menu-section" id="indica-section">
         <h2 contenteditable="true" id="indica-title">Indica</h2>
-        <ul id="indica-list">
-        </ul>
+        <button class="save-title-btn" onclick="saveTitle('indica-title', 'indica')">Save Title</button>
+        <ul id="indica-list"></ul>
         <form id="indica-form">
             <input type="text" id="indica-name" placeholder="Strain Name" required>
             <input type="number" id="indica-price" placeholder="Price" required>
@@ -139,8 +151,8 @@
 
     <div class="menu-section" id="sativa-section">
         <h2 contenteditable="true" id="sativa-title">Sativa</h2>
-        <ul id="sativa-list">
-        </ul>
+        <button class="save-title-btn" onclick="saveTitle('sativa-title', 'sativa')">Save Title</button>
+        <ul id="sativa-list"></ul>
         <form id="sativa-form">
             <input type="text" id="sativa-name" placeholder="Strain Name" required>
             <input type="number" id="sativa-price" placeholder="Price" required>
@@ -150,8 +162,8 @@
 
     <div class="menu-section" id="hybrid-section">
         <h2 contenteditable="true" id="hybrid-title">Hybrid</h2>
-        <ul id="hybrid-list">
-        </ul>
+        <button class="save-title-btn" onclick="saveTitle('hybrid-title', 'hybrid')">Save Title</button>
+        <ul id="hybrid-list"></ul>
         <form id="hybrid-form">
             <input type="text" id="hybrid-name" placeholder="Strain Name" required>
             <input type="number" id="hybrid-price" placeholder="Price" required>
@@ -161,8 +173,8 @@
 
     <div class="menu-section" id="calipacks-section">
         <h2 contenteditable="true" id="calipacks-title">Cali Packs</h2>
-        <ul id="calipacks-list">
-        </ul>
+        <button class="save-title-btn" onclick="saveTitle('calipacks-title', 'calipacks')">Save Title</button>
+        <ul id="calipacks-list"></ul>
         <form id="calipacks-form">
             <input type="text" id="calipacks-name" placeholder="Strain Name" required>
             <input type="number" id="calipacks-price" placeholder="Price" required>
@@ -172,11 +184,22 @@
 
     <div class="menu-section" id="loosecali-section">
         <h2 contenteditable="true" id="loosecali-title">Loose Cali</h2>
-        <ul id="loosecali-list">
-        </ul>
+        <button class="save-title-btn" onclick="saveTitle('loosecali-title', 'loosecali')">Save Title</button>
+        <ul id="loosecali-list"></ul>
         <form id="loosecali-form">
             <input type="text" id="loosecali-name" placeholder="Strain Name" required>
             <input type="number" id="loosecali-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
+
+    <div class="menu-section" id="other-section">
+        <h2 contenteditable="true" id="other-title">Other</h2>
+        <button class="save-title-btn" onclick="saveTitle('other-title', 'other')">Save Title</button>
+        <ul id="other-list"></ul>
+        <form id="other-form">
+            <input type="text" id="other-name" placeholder="Strain Name" required>
+            <input type="number" id="other-price" placeholder="Price" required>
             <button type="submit" class="add-btn">Add</button>
         </form>
     </div>
@@ -200,6 +223,7 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // Funzione per caricare i dati
     function loadData(sectionId, category) {
         const sectionList = document.getElementById(sectionId);
         firebase.database().ref(category).on("value", (snapshot) => {
@@ -219,6 +243,7 @@
         });
     }
 
+    // Funzione per aggiungere un nuovo strain
     function addStrain(category, nameId, priceId) {
         const name = document.getElementById(nameId).value;
         const price = document.getElementById(priceId).value;
@@ -231,11 +256,13 @@
         }
     }
 
+    // Funzione per cancellare uno strain
     function deleteStrain(category, key) {
         database.ref(`${category}/${key}`).remove();
         showToast("Strain deleted!");
     }
 
+    // Funzione per modificare uno strain
     function editStrain(category, key, nameId, priceId) {
         const name = document.getElementById(nameId).innerText;
         const price = document.getElementById(priceId).innerText;
@@ -243,31 +270,50 @@
         showToast("Strain updated!");
     }
 
+    // Funzione per modificare i titoli delle sezioni
+    function saveTitle(sectionTitleId, category) {
+        const title = document.getElementById(sectionTitleId).innerText;
+        firebase.database().ref(`titles/${category}`).set({ title: title });
+        showToast("Title updated!");
+    }
+
+    // Listener per aggiornare i titoli e caricare i dati
+    function updateSectionTitle(sectionTitleId, category) {
+        firebase.database().ref(`titles/${category}`).on("value", (snapshot) => {
+            const titleData = snapshot.val();
+            if (titleData && titleData.title) {
+                document.getElementById(sectionTitleId).innerText = titleData.title;
+            }
+        });
+    }
+
+    // Event listeners per i form di ogni sezione
     document.getElementById('indica-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('indica', 'indica-name', 'indica-price');
     });
-
     document.getElementById('sativa-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('sativa', 'sativa-name', 'sativa-price');
     });
-
     document.getElementById('hybrid-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('hybrid', 'hybrid-name', 'hybrid-price');
     });
-
     document.getElementById('calipacks-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('calipacks', 'calipacks-name', 'calipacks-price');
     });
-
     document.getElementById('loosecali-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('loosecali', 'loosecali-name', 'loosecali-price');
     });
+    document.getElementById('other-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('other', 'other-name', 'other-price');
+    });
 
+    // Toast per notifiche
     function showToast(message) {
         const toast = document.getElementById("toast");
         toast.innerHTML = message;
@@ -275,11 +321,20 @@
         setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
+    // Caricamento dati e titoli
     loadData('indica-list', 'indica');
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
     loadData('calipacks-list', 'calipacks');
     loadData('loosecali-list', 'loosecali');
+    loadData('other-list', 'other');
+
+    updateSectionTitle('indica-title', 'indica');
+    updateSectionTitle('sativa-title', 'sativa');
+    updateSectionTitle('hybrid-title', 'hybrid');
+    updateSectionTitle('calipacks-title', 'calipacks');
+    updateSectionTitle('loosecali-title', 'loosecali');
+    updateSectionTitle('other-title', 'other');
 </script>
 
 </body>
