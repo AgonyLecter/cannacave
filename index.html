@@ -27,8 +27,8 @@
         .menu-container {
             position: relative;
             z-index: 1;
-            height: 90%;
-            width: 90%;
+            height: 100vh;
+            width: 95vw;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -37,7 +37,7 @@
             border-radius: 20px;
             padding: 20px;
             background: rgba(0, 0, 0, 0.8);
-            animation: pulse 3s infinite;
+            overflow-y: auto;
         }
 
         .header {
@@ -47,48 +47,51 @@
 
         .header h1 {
             font-family: 'Fjalla One', sans-serif;
-            font-size: 4rem;
+            font-size: 5rem;
             color: #228B22;
             text-transform: uppercase;
-            text-shadow: 0 0 20px hwb(120 30% 40%), 0 0 40px hwb(120 30% 40%), 0 0 60px hwb(120 30% 40%);
-            animation: neon-text 1.5s ease-in-out infinite alternate;
+            text-shadow: 0 0 10px hwb(120 30% 40%);
         }
 
         .menu-grid {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
+            padding: 20px;
         }
 
         .menu-section {
             background-color: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 20px;
-            width: 30%;
             text-align: center;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .menu-section:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
         }
 
         .menu-section h2 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-family: 'Fjalla One', sans-serif;
             margin-bottom: 15px;
             color: #00ff00;
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
-            animation: neon-text 1.5s ease-in-out infinite alternate;
         }
 
-        .menu-section p {
-            font-size: 1.8rem;
-            margin: 10px 0;
-            color: rgba(255, 255, 255, 0.8);
+        .strain-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 2rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .strain-item:last-child {
+            border-bottom: none;
         }
 
         .footer {
@@ -99,46 +102,16 @@
             border-radius: 10px;
         }
 
-        @keyframes neon-text {
-            0%, 100% {
-                text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
-            }
-            50% {
-                text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00, 0 0 60px #00ff00;
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 30px hwb(120 30% 40%);
-            }
-            50% {
-                box-shadow: 0 0 50px hwb(120 30% 40%);
-            }
-            100% {
-                box-shadow: 0 0 30px hwb(120 30% 40%);
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .menu-section {
-                width: 45%;
-            }
-
-            .header h1 {
-                font-size: 3rem;
-            }
-        }
-
         @media (max-width: 768px) {
-            .menu-grid {
-                flex-direction: column;
-                align-items: center;
+            .header h1 {
+                font-size: 4rem;
+            }
+            .menu-section h2 {
+                font-size: 2.2rem;
             }
 
-            .menu-section {
-                width: 80%;
-                margin-bottom: 20px;
+            .strain-item {
+                font-size: 1.8rem;
             }
 
             .footer {
@@ -155,29 +128,41 @@
         <div class="menu-grid">
             <div class="menu-section" id="indica-section">
                 <h2>Indica</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
             <div class="menu-section" id="sativa-section">
                 <h2>Sativa</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
             <div class="menu-section" id="hybrid-section">
                 <h2>Hybrid</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
         </div>
         <div class="footer">
             <div class="menu-section" id="cali-packs-section">
                 <h2>Cali Packs</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
             <div class="menu-section" id="loose-cali-section">
                 <h2>Loose Cali</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
             <div class="menu-section" id="other-section">
                 <h2>Other</h2>
-                <p>Loading...</p>
+                <div class="strain-item">
+                    <span>Strain Name</span><span>Price</span>
+                </div>
             </div>
         </div>
     </div>
@@ -207,7 +192,7 @@
                 if (data) {
                     for (let key in data) {
                         const item = data[key];
-                        section.innerHTML += `<p>${item.name} - ${item.price}pts</p>`;
+                        section.innerHTML += `<div class="strain-item"><span>${item.name}</span><span>${item.price} pts</span></div>`;
                     }
                 } else {
                     section.innerHTML += `<p>No strains available</p>`;
@@ -221,25 +206,6 @@
         updateMenuData('cali-packs-section', 'caliPacks');
         updateMenuData('loose-cali-section', 'looseCali');
         updateMenuData('other-section', 'other');
-
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerHTML = message;
-            toast.className = "toast show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) {
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) {
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) {
-                document.documentElement.msRequestFullscreen();
-            }
-        });
     </script>
 </body>
 </html>
