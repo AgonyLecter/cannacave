@@ -16,12 +16,19 @@
             font-family: 'Roboto', sans-serif;
             color: #fff;
             background-color: #1b1b1b;
+            background-image: url('smoke.gif'); /* Inserimento della GIF */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed; /* Mantiene la GIF fissa mentre si scrolla */
         }
         .menu-container {
             padding: 20px;
             max-width: 1400px;
             margin: auto;
             text-align: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Scurisce il contenitore per migliorare la leggibilità */
+            border-radius: 10px;
         }
         .header {
             text-align: center;
@@ -74,32 +81,32 @@
 
     <div class="menu-grid">
         <div class="menu-section" id="indica-section">
-            <h2>Indica</h2>
+            <h2 id="indica-title">Indica</h2>
             <ul id="indica-list"></ul>
         </div>
 
         <div class="menu-section" id="sativa-section">
-            <h2>Sativa</h2>
+            <h2 id="sativa-title">Sativa</h2>
             <ul id="sativa-list"></ul>
         </div>
 
         <div class="menu-section" id="hybrid-section">
-            <h2>Hybrid</h2>
+            <h2 id="hybrid-title">Hybrid</h2>
             <ul id="hybrid-list"></ul>
         </div>
 
         <div class="menu-section" id="calipacks-section">
-            <h2>Cali Packs</h2>
+            <h2 id="calipacks-title">Cali Packs</h2>
             <ul id="calipacks-list"></ul>
         </div>
 
         <div class="menu-section" id="loosecali-section">
-            <h2>Loose Cali</h2>
+            <h2 id="loosecali-title">Loose Cali</h2>
             <ul id="loosecali-list"></ul>
         </div>
 
         <div class="menu-section" id="other-section">
-            <h2>Other</h2>
+            <h2 id="other-title">Other</h2>
             <ul id="other-list"></ul>
         </div>
     </div>
@@ -121,6 +128,16 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // Funzione per caricare i titoli delle sezioni
+    function loadTitle(sectionTitleId, category) {
+        firebase.database().ref(`titles/${category}`).on("value", (snapshot) => {
+            const titleData = snapshot.val();
+            if (titleData && titleData.title) {
+                document.getElementById(sectionTitleId).innerText = titleData.title;
+            }
+        });
+    }
+
     function loadData(sectionId, category) {
         const sectionList = document.getElementById(sectionId);
         firebase.database().ref(category).on("value", (snapshot) => {
@@ -137,6 +154,15 @@
         });
     }
 
+    // Caricamento dei titoli delle sezioni
+    loadTitle('indica-title', 'indica');
+    loadTitle('sativa-title', 'sativa');
+    loadTitle('hybrid-title', 'hybrid');
+    loadTitle('calipacks-title', 'calipacks');
+    loadTitle('loosecali-title', 'loosecali');
+    loadTitle('other-title', 'other');
+
+    // Caricamento dei dati delle sezioni
     loadData('indica-list', 'indica');
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
