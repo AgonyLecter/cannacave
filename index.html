@@ -3,210 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canna Club Menu</title>
+    <title>CannaCave Menu</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body, html {
             height: 100%;
             font-family: 'Roboto', sans-serif;
             color: #fff;
-            background-color: #000;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #1b1b1b;
         }
-
         .menu-container {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            width: 95vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 3px solid hwb(120 30% 40%);
-            box-shadow: 0 0 30px hwb(120 30% 40%);
-            border-radius: 20px;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            overflow-y: auto;
+            max-width: 1400px;
+            margin: auto;
+            text-align: center;
         }
-
         .header {
             text-align: center;
-            padding: 20px;
+            margin-bottom: 20px;
         }
-
         .header h1 {
             font-family: 'Fjalla One', sans-serif;
-            font-size: 5rem;
-            color: #228B22;
+            font-size: 4rem;
+            color: #00FF00; /* Verde fluo */
             text-transform: uppercase;
-            text-shadow: 0 0 10px hwb(120 30% 40%);
         }
-
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 20px;
+            grid-template-columns: repeat(6, 1fr); /* Aggiunto spazio per la nuova sezione */
+            gap: 20px;
         }
-
         .menu-section {
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #333;
+            border-radius: 10px;
+            padding: 15px;
         }
-
-        .menu-section:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
-        }
-
         .menu-section h2 {
-            font-size: 3rem;
-            font-family: 'Fjalla One', sans-serif;
-            margin-bottom: 15px;
-            color: #00ff00;
+            font-size: 2rem;
+            color: #00FF00; /* Verde fluo */
+            margin-bottom: 10px;
+            text-decoration: underline;
         }
-
-        .strain-item {
+        .menu-section ul {
+            list-style: none;
+            padding-left: 0;
+            font-size: 1.6rem;
+        }
+        .menu-section ul li {
+            margin: 15px 0;
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            font-size: 2rem;
-            color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .strain-item:last-child {
-            border-bottom: none;
-        }
-
-        .footer {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 4rem;
-            }
-            .menu-section h2 {
-                font-size: 2.2rem;
-            }
-
-            .strain-item {
-                font-size: 1.8rem;
-            }
-
-            .footer {
-                flex-direction: column;
-            }
+        .menu-section ul li span {
+            color: #FFFFFF; /* Bianco acceso per i dati */
+            margin: 0 15px;
         }
     </style>
 </head>
 <body>
-    <div class="menu-container">
-        <div class="header">
-            <h1>The Canna Cave</h1>
+
+<div class="menu-container">
+    <div class="header">
+        <h1>The Canna Cave</h1>
+    </div>
+
+    <div class="menu-grid">
+        <div class="menu-section" id="indica-section">
+            <h2>Indica</h2>
+            <ul id="indica-list"></ul>
         </div>
-        <div class="menu-grid">
-            <div class="menu-section" id="indica-section">
-                <h2>Indica</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
-            <div class="menu-section" id="sativa-section">
-                <h2>Sativa</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
-            <div class="menu-section" id="hybrid-section">
-                <h2>Hybrid</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
+
+        <div class="menu-section" id="sativa-section">
+            <h2>Sativa</h2>
+            <ul id="sativa-list"></ul>
         </div>
-        <div class="footer">
-            <div class="menu-section" id="cali-packs-section">
-                <h2>Cali Packs</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
-            <div class="menu-section" id="loose-cali-section">
-                <h2>Loose Cali</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
-            <div class="menu-section" id="other-section">
-                <h2>Other</h2>
-                <div class="strain-item">
-                    <span>Strain Name</span><span>Price</span>
-                </div>
-            </div>
+
+        <div class="menu-section" id="hybrid-section">
+            <h2>Hybrid</h2>
+            <ul id="hybrid-list"></ul>
+        </div>
+
+        <div class="menu-section" id="calipacks-section">
+            <h2>Cali Packs</h2>
+            <ul id="calipacks-list"></ul>
+        </div>
+
+        <div class="menu-section" id="loosecali-section">
+            <h2>Loose Cali</h2>
+            <ul id="loosecali-list"></ul>
+        </div>
+
+        <div class="menu-section" id="other-section">
+            <h2>Other</h2>
+            <ul id="other-list"></ul>
         </div>
     </div>
-    <div id="toast" class="toast"></div>
+</div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
-            authDomain: "wandernatureconnect.firebaseapp.com",
-            databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "wandernatureconnect",
-            storageBucket: "wandernatureconnect.appspot.com",
-            messagingSenderId: "1062563433646",
-            appId: "1:1062563433646:web:a7251b914f569fc105f13f",
-            measurementId: "G-SGF0KC717J"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
+        authDomain: "wandernatureconnect.firebaseapp.com",
+        databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "wandernatureconnect",
+        storageBucket: "wandernatureconnect.appspot.com",
+        messagingSenderId: "1062563433646",
+        appId: "1:1062563433646:web:a7251b914f569fc105f13f",
+        measurementId: "G-SGF0KC717J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-        function updateMenuData(sectionId, category) {
-            firebase.database().ref(category).on("value", (snapshot) => {
-                const section = document.getElementById(sectionId);
-                section.innerHTML = `<h2>${category.charAt(0).toUpperCase() + category.slice(1)}</h2>`;
-                const data = snapshot.val();
-                if (data) {
-                    for (let key in data) {
-                        const item = data[key];
-                        section.innerHTML += `<div class="strain-item"><span>${item.name}</span><span>${item.price} pts</span></div>`;
-                    }
-                } else {
-                    section.innerHTML += `<p>No strains available</p>`;
+    function loadData(sectionId, category) {
+        const sectionList = document.getElementById(sectionId);
+        firebase.database().ref(category).on("value", (snapshot) => {
+            sectionList.innerHTML = '';
+            const data = snapshot.val();
+            if (data) {
+                for (let key in data) {
+                    const item = data[key];
+                    sectionList.innerHTML += `<li><span>${item.name}</span> <span>${item.price} pts</span></li>`;
                 }
-            });
-        }
+            } else {
+                sectionList.innerHTML += '<li>No strains available</li>';
+            }
+        });
+    }
 
-        updateMenuData('indica-section', 'indica');
-        updateMenuData('sativa-section', 'sativa');
-        updateMenuData('hybrid-section', 'hybrid');
-        updateMenuData('cali-packs-section', 'caliPacks');
-        updateMenuData('loose-cali-section', 'looseCali');
-        updateMenuData('other-section', 'other');
-    </script>
+    loadData('indica-list', 'indica');
+    loadData('sativa-list', 'sativa');
+    loadData('hybrid-list', 'hybrid');
+    loadData('calipacks-list', 'calipacks');
+    loadData('loosecali-list', 'loosecali');
+    loadData('other-list', 'other'); // Aggiunta la sezione 'Other'
+</script>
+
 </body>
 </html>
 
