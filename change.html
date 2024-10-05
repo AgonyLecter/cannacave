@@ -1,102 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Manage Menu</title>
-
+    <title>Canna Club Menu Management</title>
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
+        @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
         }
-
-        h1 {
-            color: #228B22;
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+            background-color: #1b1b1b;
+        }
+        .menu-container {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .header {
             text-align: center;
             margin-bottom: 20px;
         }
-
-        .menu-section {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-section h2 {
-            margin-bottom: 10px;
+        .header h1 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 2.5rem;
             color: #228B22;
+            text-transform: uppercase;
         }
-
-        .form-group {
-            margin-bottom: 15px;
+        .menu-section {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
-
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .menu-section h2 {
+            font-size: 1.8rem;
+            color: #228B22;
+            margin-bottom: 10px;
         }
-
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            font-size: 1rem;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+        .menu-section ul {
+            list-style: none;
+            padding-left: 0;
         }
-
-        .form-group button {
-            margin-top: 10px;
-            padding: 10px 15px;
-            background-color: #228B22;
-            color: white;
+        .menu-section ul li {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .menu-section ul li span {
+            flex: 1;
+        }
+        .menu-section ul li button {
+            background-color: #d9534f;
             border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9rem;
             cursor: pointer;
-            font-size: 1rem;
             border-radius: 5px;
         }
-
-        .form-group button:hover {
-            background-color: #1e7e1e;
-        }
-
-        .delete-button {
-            background-color: #ff4d4d;
+        .menu-section form {
+            display: flex;
+            justify-content: space-between;
             margin-top: 10px;
         }
-
-        .delete-button:hover {
-            background-color: #e60000;
+        .menu-section input {
+            flex: 1;
+            margin-right: 5px;
+            padding: 5px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
         }
-
-        .update-button {
-            background-color: #4CAF50;
-            margin-top: 10px;
+        .menu-section input[type="number"] {
+            max-width: 70px;
         }
-
-        .update-button:hover {
-            background-color: #45a049;
+        .menu-section button.add-btn {
+            background-color: #5cb85c;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 5px;
         }
-
-        .strain-list {
-            margin-top: 20px;
-        }
-
-        .strain-list p {
-            font-size: 1.2rem;
-            color: #333;
-        }
-
-        .strain-list p span {
-            font-weight: bold;
-        }
-
         .toast {
             visibility: hidden;
             min-width: 250px;
@@ -112,181 +104,185 @@
             bottom: 30px;
             font-size: 17px;
         }
-
         .toast.show {
             visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
             animation: fadein 0.5s, fadeout 0.5s 2.5s;
         }
-
         @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
-            }
-            to {
-                bottom: 30px;
-                opacity: 1;
-            }
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
         }
-
         @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
-            }
-            to {
-                bottom: 0;
-                opacity: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-group input, .form-group button {
-                font-size: 1rem;
-            }
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
         }
     </style>
 </head>
-
 <body>
-    <h1>Manage Menu Categories & Strains</h1>
 
-    <div id="menu-sections"></div>
+<div class="menu-container">
+    <div class="header">
+        <h1>Menu Management</h1>
+    </div>
 
-    <div id="toast" class="toast"></div>
+    <div class="menu-section" id="indica-section">
+        <h2 contenteditable="true" id="indica-title">Indica</h2>
+        <ul id="indica-list">
+        </ul>
+        <form id="indica-form">
+            <input type="text" id="indica-name" placeholder="Strain Name" required>
+            <input type="number" id="indica-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <div class="menu-section" id="sativa-section">
+        <h2 contenteditable="true" id="sativa-title">Sativa</h2>
+        <ul id="sativa-list">
+        </ul>
+        <form id="sativa-form">
+            <input type="text" id="sativa-name" placeholder="Strain Name" required>
+            <input type="number" id="sativa-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
-            authDomain: "wandernatureconnect.firebaseapp.com",
-            databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "wandernatureconnect",
-            storageBucket: "wandernatureconnect.appspot.com",
-            messagingSenderId: "1062563433646",
-            appId: "1:1062563433646:web:a7251b914f569fc105f13f",
-            measurementId: "G-SGF0KC717J"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    <div class="menu-section" id="hybrid-section">
+        <h2 contenteditable="true" id="hybrid-title">Hybrid</h2>
+        <ul id="hybrid-list">
+        </ul>
+        <form id="hybrid-form">
+            <input type="text" id="hybrid-name" placeholder="Strain Name" required>
+            <input type="number" id="hybrid-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
 
-        const categories = ['indica', 'sativa', 'hybrid', 'looseCali', 'caliPacks', 'other'];
+    <div class="menu-section" id="calipacks-section">
+        <h2 contenteditable="true" id="calipacks-title">Cali Packs</h2>
+        <ul id="calipacks-list">
+        </ul>
+        <form id="calipacks-form">
+            <input type="text" id="calipacks-name" placeholder="Strain Name" required>
+            <input type="number" id="calipacks-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
 
-        function loadSections() {
-            categories.forEach(category => {
-                loadCategory(category);
-            });
-        }
+    <div class="menu-section" id="loosecali-section">
+        <h2 contenteditable="true" id="loosecali-title">Loose Cali</h2>
+        <ul id="loosecali-list">
+        </ul>
+        <form id="loosecali-form">
+            <input type="text" id="loosecali-name" placeholder="Strain Name" required>
+            <input type="number" id="loosecali-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
+</div>
 
-        function loadCategory(category) {
-            const menuSections = document.getElementById('menu-sections');
-            const sectionHTML = `
-            <div class="menu-section" id="${category}-section">
-                <h2 contenteditable="true" id="${category}-title">${category.charAt(0).toUpperCase() + category.slice(1)}</h2>
-                <div class="form-group">
-                    <label for="${category}-name">Strain Name</label>
-                    <input type="text" id="${category}-name" placeholder="Enter strain name">
-                </div>
-                <div class="form-group">
-                    <label for="${category}-price">Price (pts)</label>
-                    <input type="number" id="${category}-price" placeholder="Enter price in points">
-                </div>
-                <div class="form-group">
-                    <button onclick="addStrain('${category}')">Add Strain</button>
-                </div>
-                <div class="strain-list" id="${category}-list">
-                    <h3>Existing Strains</h3>
-                </div>
-            </div>`;
-            menuSections.innerHTML += sectionHTML;
-            loadStrains(category);
-        }
+<div id="toast" class="toast"></div>
 
-        function loadStrains(category) {
-            const strainList = document.getElementById(`${category}-list`);
-            strainList.innerHTML = '<h3>Existing Strains</h3>';
-            firebase.database().ref(category).on("value", (snapshot) => {
-                const data = snapshot.val();
-                strainList.innerHTML = '<h3>Existing Strains</h3>';  // Re-clear list to ensure it's fresh
-                if (data) {
-                    for (let key in data) {
-                        const item = data[key];
-                        strainList.innerHTML += `
-                            <div>
-                                <input type="text" value="${item.name}" id="${category}-${key}-name" placeholder="Strain name">
-                                <input type="number" value="${item.price}" id="${category}-${key}-price" placeholder="Price">
-                                <button class="update-button" onclick="updateStrain('${category}', '${key}')">Update</button>
-                                <button class="delete-button" onclick="deleteStrain('${category}', '${key}')">Delete</button>
-                            </div>`;
-                    }
-                } else {
-                    strainList.innerHTML += `<p>No strains found in ${category}.</p>`;
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
+        authDomain: "wandernatureconnect.firebaseapp.com",
+        databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "wandernatureconnect",
+        storageBucket: "wandernatureconnect.appspot.com",
+        messagingSenderId: "1062563433646",
+        appId: "1:1062563433646:web:a7251b914f569fc105f13f",
+        measurementId: "G-SGF0KC717J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    function loadData(sectionId, category) {
+        const sectionList = document.getElementById(sectionId);
+        firebase.database().ref(category).on("value", (snapshot) => {
+            sectionList.innerHTML = '';
+            const data = snapshot.val();
+            if (data) {
+                for (let key in data) {
+                    const item = data[key];
+                    sectionList.innerHTML += `<li><span contenteditable="true" id="name-${key}">${item.name}</span> - 
+                                              <span contenteditable="true" id="price-${key}">${item.price}</span> pts
+                                              <button onclick="deleteStrain('${category}', '${key}')">Delete</button>
+                                              <button onclick="editStrain('${category}', '${key}', 'name-${key}', 'price-${key}')">Save</button></li>`;
                 }
-            }, (error) => {
-                showToast("Error loading strains: " + error.message);
-            });
-        }
-
-        function addStrain(category) {
-            const name = document.getElementById(`${category}-name`).value;
-            const price = document.getElementById(`${category}-price`).value;
-            if (name && price) {
-                firebase.database().ref(`${category}`).push({
-                    name: name,
-                    price: parseInt(price)
-                }).then(() => {
-                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain added successfully!`);
-                    document.getElementById(`${category}-name`).value = '';
-                    document.getElementById(`${category}-price`).value = '';
-                }).catch((error) => {
-                    showToast("Error adding strain: " + error.message);
-                });
             } else {
-                showToast("Please enter both the strain name and the price.");
+                sectionList.innerHTML += '<li>No strains available</li>';
             }
-        }
+        });
+    }
 
-        function updateStrain(category, key) {
-            const name = document.getElementById(`${category}-${key}-name`).value;
-            const price = document.getElementById(`${category}-${key}-price`).value;
-            if (name && price) {
-                firebase.database().ref(`${category}/${key}`).set({
-                    name: name,
-                    price: parseInt(price)
-                }).then(() => {
-                    showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain updated successfully!`);
-                }).catch((error) => {
-                    showToast("Error updating strain: " + error.message);
-                });
-            } else {
-                showToast("Please enter both the strain name and the price.");
-            }
+    function addStrain(category, nameId, priceId) {
+        const name = document.getElementById(nameId).value;
+        const price = document.getElementById(priceId).value;
+        if (name && price) {
+            const newStrainRef = database.ref(category).push();
+            newStrainRef.set({ name: name, price: price });
+            showToast(`${name} added!`);
+            document.getElementById(nameId).value = '';
+            document.getElementById(priceId).value = '';
         }
+    }
 
-        function deleteStrain(category, key) {
-            firebase.database().ref(`${category}/${key}`).remove()
-            .then(() => {
-                showToast(`${category.charAt(0).toUpperCase() + category.slice(1)} strain deleted successfully!`);
-            }).catch((error) => {
-                showToast("Error deleting strain: " + error.message);
-            });
-        }
+    function deleteStrain(category, key) {
+        database.ref(`${category}/${key}`).remove();
+        showToast("Strain deleted!");
+    }
 
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerHTML = message;
-            toast.className = "toast show";
-            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
-        }
+    function editStrain(category, key, nameId, priceId) {
+        const name = document.getElementById(nameId).innerText;
+        const price = document.getElementById(priceId).innerText;
+        database.ref(`${category}/${key}`).set({ name: name.trim(), price: parseInt(price.trim()) });
+        showToast("Strain updated!");
+    }
 
-        window.onload = function () {
-            loadSections();
-        };
-    </script>
+    document.getElementById('indica-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('indica', 'indica-name', 'indica-price');
+    });
+
+    document.getElementById('sativa-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('sativa', 'sativa-name', 'sativa-price');
+    });
+
+    document.getElementById('hybrid-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('hybrid', 'hybrid-name', 'hybrid-price');
+    });
+
+    document.getElementById('calipacks-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('calipacks', 'calipacks-name', 'calipacks-price');
+    });
+
+    document.getElementById('loosecali-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('loosecali', 'loosecali-name', 'loosecali-price');
+    });
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerHTML = message;
+        toast.className = "toast show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    loadData('indica-list', 'indica');
+    loadData('sativa-list', 'sativa');
+    loadData('hybrid-list', 'hybrid');
+    loadData('calipacks-list', 'calipacks');
+    loadData('loosecali-list', 'loosecali');
+</script>
+
 </body>
-
 </html>
 
 
