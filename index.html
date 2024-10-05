@@ -6,126 +6,141 @@
     <title>Canna Club Menu</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body, html {
             height: 100%;
             font-family: 'Roboto', sans-serif;
             color: #fff;
-            background-color: #000; /* Black background for contrast */
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+
         .menu-container {
             position: relative;
             z-index: 1;
-            height: 100%;
+            height: 90%;
+            width: 90%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            border: 3px solid hwb(120 30% 40%);
+            box-shadow: 0 0 30px hwb(120 30% 40%);
+            border-radius: 20px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            animation: pulse 3s infinite;
         }
+
         .header {
             text-align: center;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
         }
+
         .header h1 {
             font-family: 'Fjalla One', sans-serif;
-            font-size: 3rem;
+            font-size: 4rem;
             color: #228B22;
             text-transform: uppercase;
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; /* LED Effect */
+            text-shadow: 0 0 20px hwb(120 30% 40%), 0 0 40px hwb(120 30% 40%), 0 0 60px hwb(120 30% 40%);
+            animation: neon-text 1.5s ease-in-out infinite alternate;
         }
+
         .menu-grid {
             display: flex;
             justify-content: space-around;
             padding: 20px;
+            gap: 30px;
         }
+
         .menu-section {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             padding: 20px;
-            width: 28%;
+            width: 30%;
             text-align: center;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            color: #1b1b1b;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
+        .menu-section:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+        }
+
         .menu-section h2 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-family: 'Fjalla One', sans-serif;
             margin-bottom: 15px;
-            color: #228B22;
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00; /* LED Effect */
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
+            animation: neon-text 1.5s ease-in-out infinite alternate;
         }
+
         .menu-section p {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin: 10px 0;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
         }
+
         .footer {
             display: flex;
             justify-content: space-around;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
         }
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-        }
-        .toast.show {
-            visibility: visible;
-            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-            animation: fadein 0.5s, fadeout 0.5s 2.5s;
-        }
-        @keyframes fadein {
-            from {
-                bottom: 0;
-                opacity: 0;
+
+        @keyframes neon-text {
+            0%, 100% {
+                text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
             }
-            to {
-                bottom: 30px;
-                opacity: 1;
+            50% {
+                text-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00, 0 0 60px #00ff00;
             }
         }
-        @keyframes fadeout {
-            from {
-                bottom: 30px;
-                opacity: 1;
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 30px hwb(120 30% 40%);
             }
-            to {
-                bottom: 0;
-                opacity: 0;
+            50% {
+                box-shadow: 0 0 50px hwb(120 30% 40%);
+            }
+            100% {
+                box-shadow: 0 0 30px hwb(120 30% 40%);
             }
         }
+
         @media (max-width: 1200px) {
             .menu-section {
                 width: 45%;
             }
+
             .header h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
             }
         }
+
         @media (max-width: 768px) {
             .menu-grid {
                 flex-direction: column;
                 align-items: center;
             }
+
             .menu-section {
                 width: 80%;
                 margin-bottom: 20px;
             }
+
             .footer {
                 flex-direction: column;
             }
@@ -167,7 +182,7 @@
         </div>
     </div>
     <div id="toast" class="toast"></div>
-    
+
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
@@ -199,6 +214,7 @@
                 }
             });
         }
+
         updateMenuData('indica-section', 'indica');
         updateMenuData('sativa-section', 'sativa');
         updateMenuData('hybrid-section', 'hybrid');
@@ -213,15 +229,14 @@
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
-        // Fullscreen functionality
         document.addEventListener("DOMContentLoaded", function() {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { // Firefox
+            } else if (document.documentElement.mozRequestFullScreen) {
                 document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari and Opera
+            } else if (document.documentElement.webkitRequestFullscreen) {
                 document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
+            } else if (document.documentElement.msRequestFullscreen) {
                 document.documentElement.msRequestFullscreen();
             }
         });
