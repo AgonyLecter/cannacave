@@ -16,11 +16,9 @@
             width: 100%;
             font-family: 'Roboto', sans-serif;
             color: #fff;
-            background-color: #1b1b1b;
             overflow: hidden;
         }
 
-        /* GIF con animazione continua */
         .background {
             position: fixed;
             top: 0;
@@ -30,10 +28,10 @@
             background-image: url('smoke.gif');
             background-size: cover;
             background-position: center center;
-            animation: fadeAnimation 40s infinite linear; /* Animazione infinita */
+            z-index: -1;
+            animation: fadeAnimation 40s infinite linear;
         }
 
-        /* Effetto di dissolvenza per la transizione continua */
         @keyframes fadeAnimation {
             0% {
                 opacity: 1;
@@ -47,11 +45,11 @@
         }
 
         .menu-container {
-            padding: 5vw; /* Utilizzo di unità fluide */
-            width: 90vw; /* Il contenitore si adatta alla larghezza dello schermo */
+            padding: 20px;
+            max-width: 1400px;
             margin: auto;
             text-align: center;
-            background-color: rgba(0, 0, 0, 0.7); /* Scurisce il contenitore per migliorare la leggibilità */
+            background-color: rgba(0, 0, 0, 0.5); /* Trasparente per vedere il fumo */
             border-radius: 10px;
             position: relative;
             z-index: 1;
@@ -59,66 +57,67 @@
 
         .header {
             text-align: center;
-            margin-bottom: 5vh;
+            margin-bottom: 20px;
         }
 
         .header h1 {
             font-family: 'Fjalla One', sans-serif;
-            font-size: 6vw; /* Testo adattabile */
-            color: #00FF00; /* Verde fluo */
+            font-size: 4rem;
+            color: #00FF00;
             text-transform: uppercase;
         }
 
-        /* Griglia per disporre le sezioni, adattata a 3 colonne */
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Tre colonne */
-            gap: 3vw; /* Spaziatura tra le sezioni */
-            align-items: start;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .menu-section {
+            background-color: rgba(51, 51, 51, 0.7); /* Trasparente per vedere il fumo sotto */
+            border-radius: 10px;
+            padding: 15px;
         }
 
         .menu-section h2 {
-            font-size: 2.5vw; /* Testo delle sezioni adattabile */
-            color: #00FF00; /* Verde fluo */
-            margin-bottom: 1.5vh;
-            text-align: left;
-            padding-left: 1.5vw;
+            font-size: 2rem;
+            color: #00FF00;
+            margin-bottom: 10px;
             text-decoration: underline;
         }
 
-        .menu-list {
+        .menu-section ul {
             list-style: none;
             padding-left: 0;
-            margin: 0;
-            font-size: 1.8vw; /* Dimensione del testo fluida */
+            font-size: 1.6rem;
         }
 
-        /* Nome e prezzo sempre allineati */
-        .menu-list li {
+        .menu-section ul li {
+            margin: 10px 0;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid #fff;
-            padding: 1vh 1.5vw;
         }
 
-        .menu-list li span {
-            color: #FFFFFF; /* Bianco acceso per i dati */
+        .menu-section ul li span {
+            color: #FFFFFF;
         }
 
-        .menu-list li span.price {
-            margin-left: auto; /* Sposta il prezzo a destra */
+        .menu-section ul li span.price {
+            margin-left: auto;
             font-weight: bold;
         }
 
-        /* Cali Packs, Loose Cali e Other posizionati in basso */
-        .menu-grid div:nth-last-child(-n+3) {
-            grid-column: span 3;
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-gap: 20px;
         }
     </style>
 </head>
 <body>
 
-<!-- Contenitore per la GIF -->
 <div class="background"></div>
 
 <div class="menu-container">
@@ -141,7 +140,9 @@
             <h2 id="hybrid-title">Hybrid</h2>
             <ul class="menu-list" id="hybrid-list"></ul>
         </div>
+    </div>
 
+    <div class="footer-grid">
         <div class="menu-section">
             <h2 id="calipacks-title">Cali Packs</h2>
             <ul class="menu-list" id="calipacks-list"></ul>
@@ -175,7 +176,6 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Funzione per caricare i titoli delle sezioni
     function loadTitle(sectionTitleId, category) {
         firebase.database().ref(`titles/${category}`).on("value", (snapshot) => {
             const titleData = snapshot.val();
@@ -196,12 +196,11 @@
                     sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
                 }
             } else {
-                sectionList.innerHTML += '<li><span>No strains available</span></li>';
+                sectionList.innerHTML += '<li>No strains available</li>';
             }
         });
     }
 
-    // Caricamento dei titoli delle sezioni
     loadTitle('indica-title', 'indica');
     loadTitle('sativa-title', 'sativa');
     loadTitle('hybrid-title', 'hybrid');
@@ -209,7 +208,6 @@
     loadTitle('loosecali-title', 'loosecali');
     loadTitle('other-title', 'other');
 
-    // Caricamento dei dati delle sezioni
     loadData('indica-list', 'indica');
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
