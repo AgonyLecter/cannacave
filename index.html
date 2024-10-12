@@ -239,20 +239,29 @@
     }
 
     function loadData(sectionId, category) {
-        const sectionList = document.getElementById(sectionId);
-        firebase.database().ref(category).on("value", (snapshot) => {
-            sectionList.innerHTML = '';
-            const data = snapshot.val();
-            if (data) {
-                for (let key in data) {
-                    const item = data[key];
-                    sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
-                }
-            } else {
-                sectionList.innerHTML += '<li>No strains available</li>';
-            }
-        });
-    }
+    const sectionList = document.getElementById(sectionId);
+    firebase.database().ref(category).on("value", (snapshot) => {
+        sectionList.innerHTML = '';
+        const data = snapshot.val();
+        if (data) {
+            // Converte i dati in un array per ordinarli
+            const items = Object.entries(data).map(([key, value]) => ({
+                key,
+                ...value
+            }));
+            // Ordina gli strain per prezzo decrescente
+            items.sort((a, b) => b.price - a.price);
+
+            // Itera sugli elementi ordinati e crea gli elementi HTML
+            items.forEach(item => {
+                sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
+            });
+        } else {
+            sectionList.innerHTML += '<li>No strains available</li>';
+        }
+    });
+}
+
 
     loadTitle('indica-title', 'indica');
     loadTitle('sativa-title', 'sativa');
