@@ -57,9 +57,6 @@
             background-color: #333;
             color: #fff;
         }
-        .form-group input[type="file"] {
-            padding: 5px;
-        }
         .form-group button {
             background-color: #5cb85c;
             border: none;
@@ -151,6 +148,16 @@
     <div id="current-time"></div>
 
     <div class="form-group">
+        <label for="member-name">First Name</label>
+        <input type="text" id="member-name" placeholder="Enter First Name" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="member-surname">Last Name</label>
+        <input type="text" id="member-surname" placeholder="Enter Last Name" required>
+    </div>
+
+    <div class="form-group">
         <label for="member-id">Member ID</label>
         <input type="text" id="member-id" placeholder="Enter Member ID" required>
     </div>
@@ -170,7 +177,7 @@
     </div>
 
     <div class="search-bar">
-        <input type="text" id="search-id" placeholder="Search by Member ID">
+        <input type="text" id="search-id" placeholder="Search by Member ID or Name">
         <button onclick="searchMember()">Search</button>
     </div>
 
@@ -201,11 +208,13 @@
 
     function registerMember() {
         const memberId = document.getElementById('member-id').value;
+        const memberName = document.getElementById('member-name').value;
+        const memberSurname = document.getElementById('member-surname').value;
         const expiryDate = document.getElementById('expiry-date').value;
         const documentPhoto = document.getElementById('document-photo').files[0];
         const timestamp = new Date().toISOString();
 
-        if (memberId && expiryDate && documentPhoto) {
+        if (memberId && memberName && memberSurname && expiryDate && documentPhoto) {
             const memberRef = database.ref('members/' + memberId);
             const storageRef = storage.ref('documents/' + memberId);
 
@@ -213,6 +222,8 @@
                 snapshot.ref.getDownloadURL().then((url) => {
                     memberRef.set({
                         memberId,
+                        name: memberName,
+                        surname: memberSurname,
                         expiryDate,
                         documentUrl: url,
                         registrationDate: timestamp
@@ -231,26 +242,25 @@
     }
 
     function searchMember() {
-        const searchId = document.getElementById('search-id').value;
+        const searchQuery = document.getElementById('search-id').value.toLowerCase();
         const membersList = document.getElementById('members-list');
         membersList.innerHTML = '';
 
-        if (searchId) {
-            const memberRef = database.ref('members/' + searchId);
-            memberRef.once('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    membersList.innerHTML += createMemberItem(data);
-                } else {
-                    showToast('No member found with that ID.');
+        database.ref('members').once('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                for (let key in data) {
+                    const member = data[key];
+                    if (member.memberId.toLowerCase() === searchQuery || 
+                        member.name.toLowerCase().includes(searchQuery) || 
+                        member.surname.toLowerCase().includes(searchQuery)) {
+                        membersList.innerHTML += createMemberItem(member);
+                    }
                 }
-            }).catch(error => {
-                console.error("Error retrieving member: ", error);
-                showToast('Error retrieving member. Please try again.');
-            });
-        } else {
-            showToast('Please enter a Member ID to search.');
-        }
+            } else {
+                showToast('No members registered yet.');
+            }
+        });
     }
 
     function loadMembers() {
@@ -272,6 +282,7 @@
         return `<div class="member-item">
             <div>
                 <p><strong>ID:</strong> ${data.memberId}</p>
+                <p><strong>Name:</strong> ${data.name} ${data.surname}</p>
                 <p><strong>Expiry Date:</strong> ${data.expiryDate}</p>
                 <p><strong>Registration Date:</strong> ${data.registrationDate}</p>
                 <img src="${data.documentUrl}" alt="Document Photo" style="width: 100%; max-width: 200px;">
@@ -300,6 +311,8 @@
             const data = snapshot.val();
             if (data) {
                 document.getElementById('member-id').value = data.memberId;
+                document.getElementById('member-name').value = data.name;
+                document.getElementById('member-surname').value = data.surname;
                 document.getElementById('expiry-date').value = data.expiryDate;
                 showToast('Member data loaded for editing.');
             }
@@ -311,6 +324,8 @@
 
     function clearForm() {
         document.getElementById('member-id').value = '';
+        document.getElementById('member-name').value = '';
+        document.getElementById('member-surname').value = '';
         document.getElementById('expiry-date').value = '';
         document.getElementById('document-photo').value = '';
     }
