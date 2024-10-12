@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Registration</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1b1b1b;
+            color: #fff;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-family: 'Fjalla One', sans-serif;
+            font-size: 2.5rem;
+            color: #00FF00;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 10px rgba(0, 255, 0, 0.8);
+        }
+        #current-time {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            background-color: #333;
+            color: #fff;
+        }
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+        .form-group button {
+            background-color: #5cb85c;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .members-list {
+            margin-top: 20px;
+        }
+        .member-item {
+            background-color: rgba(51, 51, 51, 0.7);
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .member-item button {
+            background-color: #d9534f;
+            border: none;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            margin-right: 5px;
+            background-color: #333;
+            color: #fff;
+        }
+        .search-bar button {
+            background-color: #00FF00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #000;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+        }
+        .toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 30px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { bottom: 30px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Register Member</h1>
+    </div>
+
+    <div id="current-time"></div>
+
+    <div class="form-group">
+        <label for="member-id">Member ID</label>
+        <input type="text" id="member-id" placeholder="Enter Member ID" required>
+    </div>
+
+    <div class="form-group">
+        <label for="expiry-date">Expiry Date</label>
+        <input type="date" id="expiry-date" required>
+    </div>
+
+    <div class="form-group">
+        <label for="document-photo">Upload Document Photo</label>
+        <input type="file" id="document-photo" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+        <button onclick="registerMember()">Register Member</button>
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="search-id" placeholder="Search by Member ID">
+        <button onclick="searchMember()">Search</button>
+    </div>
+
+    <div class="members-list" id="members-list">
+        <!-- Members will be displayed here -->
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyC7qhjI3lRxqZGbvmTQscetvvhuE8T4N4I",
+        authDomain: "wandernatureconnect.firebaseapp.com",
+        databaseURL: "https://wandernatureconnect-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "wandernatureconnect",
+        storageBucket: "wandernatureconnect.appspot.com",
+        messagingSenderId: "1062563433646",
+        appId: "1:1062563433646:web:a7251b914f569fc105f13f",
+        measurementId: "G-SGF0KC717J"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const storage = firebase.storage();
+
+    function registerMember() {
+        const memberId = document.getElementById('member-id').value;
+        const expiryDate = document.getElementById('expiry-date').value;
+        const documentPhoto = document.getElementById('document-photo').files[0];
+        const timestamp = new Date().toISOString();
+
+        if (memberId && expiryDate && documentPhoto) {
+            const memberRef = database.ref('members/' + memberId);
+            const storageRef = storage.ref('documents/' + memberId);
+
+            storageRef.put(documentPhoto).then(snapshot => {
+                snapshot.ref.getDownloadURL().then((url) => {
+                    memberRef.set({
+                        memberId,
+                        expiryDate,
+                        documentUrl: url,
+                        registrationDate: timestamp
+                    });
+                    showToast('Member registered successfully!');
+                    clearForm();
+                    loadMembers();
+                });
+            }).catch(error => {
+                console.error("Error uploading document: ", error);
+                showToast('Error uploading document. Please try again.');
+            });
+        } else {
+            showToast('Please fill in all fields.');
+        }
+    }
+
+    function searchMember() {
+        const searchId = document.getElementById('search-id').value;
+        const membersList = document.getElementById('members-list');
+        membersList.innerHTML = '';
+
+        if (searchId) {
+            const memberRef = database.ref('members/' + searchId);
+            memberRef.once('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    membersList.innerHTML += createMemberItem(data);
+                } else {
+                    showToast('No member found with that ID.');
+                }
+            }).catch(error => {
+                console.error("Error retrieving member: ", error);
+                showToast('Error retrieving member. Please try again.');
+            });
+        } else {
+            showToast('Please enter a Member ID to search.');
+        }
+    }
+
+    function loadMembers() {
+        const membersList = document.getElementById('members-list');
+        membersList.innerHTML = '';
+        database.ref('members').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                for (let key in data) {
+                    membersList.innerHTML += createMemberItem(data[key]);
+                }
+            } else {
+                membersList.innerHTML = '<p>No members registered yet.</p>';
+            }
+        });
+    }
+
+    function createMemberItem(data) {
+        return `<div class="member-item">
+            <div>
+                <p><strong>ID:</strong> ${data.memberId}</p>
+                <p><strong>Expiry Date:</strong> ${data.expiryDate}</p>
+                <p><strong>Registration Date:</strong> ${data.registrationDate}</p>
+                <img src="${data.documentUrl}" alt="Document Photo" style="width: 100%; max-width: 200px;">
+            </div>
+            <div>
+                <button onclick="deleteMember('${data.memberId}')">Delete</button>
+                <button onclick="editMember('${data.memberId}')">Edit</button>
+            </div>
+        </div>`;
+    }
+
+    function deleteMember(memberId) {
+        database.ref('members/' + memberId).remove()
+            .then(() => {
+                showToast('Member deleted successfully!');
+                loadMembers();
+            })
+            .catch(error => {
+                console.error("Error deleting member: ", error);
+                showToast('Error deleting member. Please try again.');
+            });
+    }
+
+    function editMember(memberId) {
+        database.ref('members/' + memberId).once('value').then((snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('member-id').value = data.memberId;
+                document.getElementById('expiry-date').value = data.expiryDate;
+                showToast('Member data loaded for editing.');
+            }
+        }).catch(error => {
+            console.error("Error loading member data: ", error);
+            showToast('Error loading member data. Please try again.');
+        });
+    }
+
+    function clearForm() {
+        document.getElementById('member-id').value = '';
+        document.getElementById('expiry-date').value = '';
+        document.getElementById('document-photo').value = '';
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerHTML = message;
+        toast.className = "toast show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+    }
+
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleString();
+    }
+
+    setInterval(updateTime, 1000);
+    loadMembers();
+</script>
+
+</body>
+</html>
