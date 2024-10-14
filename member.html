@@ -163,11 +163,6 @@
     </div>
 
     <div class="form-group">
-        <label for="expiry-date">Expiry Date</label>
-        <input type="date" id="expiry-date" required>
-    </div>
-
-    <div class="form-group">
         <label for="document-photo">Upload Document Photo</label>
         <input type="file" id="document-photo" accept="image/*" required>
     </div>
@@ -210,11 +205,10 @@
         const memberId = document.getElementById('member-id').value;
         const memberName = document.getElementById('member-name').value;
         const memberSurname = document.getElementById('member-surname').value;
-        const expiryDate = document.getElementById('expiry-date').value;
         const documentPhoto = document.getElementById('document-photo').files[0];
-        const timestamp = new Date().toISOString();
+        const timestamp = new Date().toLocaleString();
 
-        if (memberId && memberName && memberSurname && expiryDate && documentPhoto) {
+        if (memberId && memberName && memberSurname && documentPhoto) {
             const memberRef = database.ref('members/' + memberId);
             const storageRef = storage.ref('documents/' + memberId);
 
@@ -224,7 +218,6 @@
                         memberId,
                         name: memberName,
                         surname: memberSurname,
-                        expiryDate,
                         documentUrl: url,
                         registrationDate: timestamp
                     });
@@ -283,7 +276,6 @@
             <div>
                 <p><strong>ID:</strong> ${data.memberId}</p>
                 <p><strong>Name:</strong> ${data.name} ${data.surname}</p>
-                <p><strong>Expiry Date:</strong> ${data.expiryDate}</p>
                 <p><strong>Registration Date:</strong> ${data.registrationDate}</p>
                 <img src="${data.documentUrl}" alt="Document Photo" style="width: 100%; max-width: 200px;">
             </div>
@@ -313,7 +305,6 @@
                 document.getElementById('member-id').value = data.memberId;
                 document.getElementById('member-name').value = data.name;
                 document.getElementById('member-surname').value = data.surname;
-                document.getElementById('expiry-date').value = data.expiryDate;
                 showToast('Member data loaded for editing.');
             }
         }).catch(error => {
@@ -326,7 +317,6 @@
         document.getElementById('member-id').value = '';
         document.getElementById('member-name').value = '';
         document.getElementById('member-surname').value = '';
-        document.getElementById('expiry-date').value = '';
         document.getElementById('document-photo').value = '';
     }
 
