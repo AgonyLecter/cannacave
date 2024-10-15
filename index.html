@@ -79,7 +79,7 @@
             background-color: rgba(51, 51, 51, 0.7);
             border-radius: 10px;
             padding: 10px;
-            overflow-y: hidden; /* Rimuove scroll e assicura visibilità completa */
+            overflow-y: hidden;
         }
 
         .menu-section h2 {
@@ -144,37 +144,37 @@
 
     <div class="menu-grid">
         <div class="promo-section menu-section">
-            <h2>Promo</h2>
+            <h2 id="promo-title">Promo</h2>
             <ul id="promo-list"></ul>
         </div>
 
         <div class="menu-section" id="indica-section">
-            <h2>Indica</h2>
+            <h2 id="indica-title">Indica</h2>
             <ul id="indica-list"></ul>
         </div>
 
         <div class="menu-section" id="sativa-section">
-            <h2>Sativa</h2>
+            <h2 id="sativa-title">Sativa</h2>
             <ul id="sativa-list"></ul>
         </div>
 
         <div class="menu-section" id="hybrid-section">
-            <h2>Hybrid</h2>
+            <h2 id="hybrid-title">Hybrid</h2>
             <ul id="hybrid-list"></ul>
         </div>
 
         <div class="menu-section" id="calipacks-section">
-            <h2>Cali Packs</h2>
+            <h2 id="calipacks-title">Cali Packs</h2>
             <ul id="calipacks-list"></ul>
         </div>
 
         <div class="menu-section" id="topweed-section">
-            <h2>Top Weed</h2>
+            <h2 id="topweed-title">Top Weed</h2>
             <ul id="topweed-list"></ul>
         </div>
 
         <div class="menu-section" id="edibles-section">
-            <h2>Edibles</h2>
+            <h2 id="edibles-title">Edibles</h2>
             <ul id="edibles-list"></ul>
         </div>
     </div>
@@ -215,17 +215,36 @@
         });
     }
 
+    function updateSectionTitle(sectionTitleId, category) {
+        firebase.database().ref(`titles/${category}`).on("value", (snapshot) => {
+            const titleData = snapshot.val();
+            if (titleData && titleData.title) {
+                document.getElementById(sectionTitleId).innerHTML = titleData.title; // Usa innerHTML per supportare emoji
+            }
+        });
+    }
+
+    loadData('promo-list', 'promo');
     loadData('indica-list', 'indica');
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
     loadData('calipacks-list', 'calipacks');
     loadData('topweed-list', 'topweed');
     loadData('edibles-list', 'edibles');
-    loadData('promo-list', 'promo');
+
+    // Aggiorna i titoli delle sezioni
+    updateSectionTitle('promo-title', 'promo');
+    updateSectionTitle('indica-title', 'indica');
+    updateSectionTitle('sativa-title', 'sativa');
+    updateSectionTitle('hybrid-title', 'hybrid');
+    updateSectionTitle('calipacks-title', 'calipacks');
+    updateSectionTitle('topweed-title', 'topweed');
+    updateSectionTitle('edibles-title', 'edibles');
 </script>
 
 </body>
 </html>
+
 
 
 
