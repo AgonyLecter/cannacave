@@ -208,6 +208,7 @@
                     key,
                     ...value
                 }));
+                items.sort((a, b) => b.price - a.price);
                 items.forEach(item => {
                     sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
                 });
