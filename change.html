@@ -196,24 +196,24 @@
         </form>
     </div>
 
-    <div class="menu-section" id="loosecali-section">
-        <h2 contenteditable="true" id="loosecali-title">Loose Cali</h2>
-        <button class="save-title-btn" onclick="saveTitle('loosecali-title', 'loosecali')">Save Title</button>
-        <ul id="loosecali-list"></ul>
-        <form id="loosecali-form">
-            <input type="text" id="loosecali-name" placeholder="Strain Name" required>
-            <input type="number" id="loosecali-price" placeholder="Price" required>
+    <div class="menu-section" id="topweed-section">
+        <h2 contenteditable="true" id="topweed-title">Top Weed</h2>
+        <button class="save-title-btn" onclick="saveTitle('topweed-title', 'topweed')">Save Title</button>
+        <ul id="topweed-list"></ul>
+        <form id="topweed-form">
+            <input type="text" id="topweed-name" placeholder="Strain Name" required>
+            <input type="number" id="topweed-price" placeholder="Price" required>
             <button type="submit" class="add-btn">Add</button>
         </form>
     </div>
 
-    <div class="menu-section" id="other-section">
-        <h2 contenteditable="true" id="other-title">Other</h2>
-        <button class="save-title-btn" onclick="saveTitle('other-title', 'other')">Save Title</button>
-        <ul id="other-list"></ul>
-        <form id="other-form">
-            <input type="text" id="other-name" placeholder="Strain Name" required>
-            <input type="number" id="other-price" placeholder="Price" required>
+    <div class="menu-section" id="edibles-section">
+        <h2 contenteditable="true" id="edibles-title">Edibles</h2>
+        <button class="save-title-btn" onclick="saveTitle('edibles-title', 'edibles')">Save Title</button>
+        <ul id="edibles-list"></ul>
+        <form id="edibles-form">
+            <input type="text" id="edibles-name" placeholder="Strain Name" required>
+            <input type="number" id="edibles-price" placeholder="Price" required>
             <button type="submit" class="add-btn">Add</button>
         </form>
     </div>
@@ -318,13 +318,13 @@
         e.preventDefault();
         addStrain('calipacks', 'calipacks-name', 'calipacks-price');
     });
-    document.getElementById('loosecali-form').addEventListener('submit', (e) => {
+    document.getElementById('topweed-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        addStrain('loosecali', 'loosecali-name', 'loosecali-price');
+        addStrain('topweed', 'topweed-name', 'topweed-price');
     });
-    document.getElementById('other-form').addEventListener('submit', (e) => {
+    document.getElementById('edibles-form').addEventListener('submit', (e) => {
         e.preventDefault();
-        addStrain('other', 'other-name', 'other-price');
+        addStrain('edibles', 'edibles-name', 'edibles-price');
     });
 
     function showToast(message) {
@@ -339,16 +339,16 @@
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
     loadData('calipacks-list', 'calipacks');
-    loadData('loosecali-list', 'loosecali');
-    loadData('other-list', 'other');
+    loadData('topweed-list', 'topweed');
+    loadData('edibles-list', 'edibles');
 
     updateSectionTitle('promo-title', 'promo');
     updateSectionTitle('indica-title', 'indica');
     updateSectionTitle('sativa-title', 'sativa');
     updateSectionTitle('hybrid-title', 'hybrid');
     updateSectionTitle('calipacks-title', 'calipacks');
-    updateSectionTitle('loosecali-title', 'loosecali');
-    updateSectionTitle('other-title', 'other');
+    updateSectionTitle('topweed-title', 'topweed');
+    updateSectionTitle('edibles-title', 'edibles');
 </script>
 
 </body>
