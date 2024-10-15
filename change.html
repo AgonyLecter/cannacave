@@ -128,6 +128,10 @@
             from { bottom: 30px; opacity: 1; }
             to { bottom: 0; opacity: 0; }
         }
+        .sticker-support img {
+            height: 50px;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -137,7 +141,17 @@
         <h1>Menu Management</h1>
     </div>
 
-    <!-- Section Template -->
+    <div class="menu-section" id="promo-section">
+        <h2 contenteditable="true" id="promo-title">Promo</h2>
+        <button class="save-title-btn" onclick="saveTitle('promo-title', 'promo')">Save Title</button>
+        <ul id="promo-list"></ul>
+        <form id="promo-form">
+            <input type="text" id="promo-name" placeholder="Promo Name" required>
+            <input type="number" id="promo-price" placeholder="Price" required>
+            <button type="submit" class="add-btn">Add</button>
+        </form>
+    </div>
+
     <div class="menu-section" id="indica-section">
         <h2 contenteditable="true" id="indica-title">Indica</h2>
         <button class="save-title-btn" onclick="saveTitle('indica-title', 'indica')">Save Title</button>
@@ -203,9 +217,7 @@
             <button type="submit" class="add-btn">Add</button>
         </form>
     </div>
-</div>
-
-<div id="toast" class="toast"></div>
+    <div id="toast" class="toast"></div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -223,36 +235,30 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Funzione per caricare i dati
     function loadData(sectionId, category) {
-    const sectionList = document.getElementById(sectionId);
-    firebase.database().ref(category).on("value", (snapshot) => {
-        sectionList.innerHTML = '';
-        const data = snapshot.val();
-        if (data) {
-            // Converte i dati in un array per ordinarli
-            const items = Object.entries(data).map(([key, value]) => ({
-                key,
-                ...value
-            }));
-            // Ordina gli strain per prezzo decrescente
-            items.sort((a, b) => b.price - a.price);
+        const sectionList = document.getElementById(sectionId);
+        firebase.database().ref(category).on("value", (snapshot) => {
+            sectionList.innerHTML = '';
+            const data = snapshot.val();
+            if (data) {
+                const items = Object.entries(data).map(([key, value]) => ({
+                    key,
+                    ...value
+                }));
+                items.sort((a, b) => b.price - a.price);
 
-            // Itera sugli elementi ordinati e crea gli elementi HTML
-            items.forEach(item => {
-                sectionList.innerHTML += `<li><span contenteditable="true" id="name-${item.key}">${item.name}</span> - 
-                                          <span contenteditable="true" id="price-${item.key}">${item.price}</span> pts
-                                          <button onclick="deleteStrain('${category}', '${item.key}')">Delete</button>
-                                          <button onclick="editStrain('${category}', '${item.key}', 'name-${item.key}', 'price-${item.key}')">Save</button></li>`;
-            });
-        } else {
-            sectionList.innerHTML += '<li>No strains available</li>';
-        }
-    });
-}
+                items.forEach(item => {
+                    sectionList.innerHTML += `<li><span contenteditable="true" id="name-${item.key}">${item.name}</span> - 
+                                              <span contenteditable="true" id="price-${item.key}">${item.price}</span> pts
+                                              <button onclick="deleteStrain('${category}', '${item.key}')">Delete</button>
+                                              <button onclick="editStrain('${category}', '${item.key}', 'name-${item.key}', 'price-${item.key}')">Save</button></li>`;
+                });
+            } else {
+                sectionList.innerHTML += '<li>No items available</li>';
+            }
+        });
+    }
 
-
-    // Funzione per aggiungere un nuovo strain
     function addStrain(category, nameId, priceId) {
         const name = document.getElementById(nameId).value;
         const price = document.getElementById(priceId).value;
@@ -265,28 +271,24 @@
         }
     }
 
-    // Funzione per cancellare uno strain
     function deleteStrain(category, key) {
         database.ref(`${category}/${key}`).remove();
-        showToast("Strain deleted!");
+        showToast("Item deleted!");
     }
 
-    // Funzione per modificare uno strain
     function editStrain(category, key, nameId, priceId) {
         const name = document.getElementById(nameId).innerText;
         const price = document.getElementById(priceId).innerText;
         database.ref(`${category}/${key}`).set({ name: name.trim(), price: parseInt(price.trim()) });
-        showToast("Strain updated!");
+        showToast("Item updated!");
     }
 
-    // Funzione per modificare i titoli delle sezioni
     function saveTitle(sectionTitleId, category) {
         const title = document.getElementById(sectionTitleId).innerText;
         firebase.database().ref(`titles/${category}`).set({ title: title });
         showToast("Title updated!");
     }
 
-    // Listener per aggiornare i titoli e caricare i dati
     function updateSectionTitle(sectionTitleId, category) {
         firebase.database().ref(`titles/${category}`).on("value", (snapshot) => {
             const titleData = snapshot.val();
@@ -296,7 +298,10 @@
         });
     }
 
-    // Event listeners per i form di ogni sezione
+    document.getElementById('promo-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        addStrain('promo', 'promo-name', 'promo-price');
+    });
     document.getElementById('indica-form').addEventListener('submit', (e) => {
         e.preventDefault();
         addStrain('indica', 'indica-name', 'indica-price');
@@ -322,7 +327,6 @@
         addStrain('other', 'other-name', 'other-price');
     });
 
-    // Toast per notifiche
     function showToast(message) {
         const toast = document.getElementById("toast");
         toast.innerHTML = message;
@@ -330,7 +334,7 @@
         setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
     }
 
-    // Caricamento dati e titoli
+    loadData('promo-list', 'promo');
     loadData('indica-list', 'indica');
     loadData('sativa-list', 'sativa');
     loadData('hybrid-list', 'hybrid');
@@ -338,6 +342,7 @@
     loadData('loosecali-list', 'loosecali');
     loadData('other-list', 'other');
 
+    updateSectionTitle('promo-title', 'promo');
     updateSectionTitle('indica-title', 'indica');
     updateSectionTitle('sativa-title', 'sativa');
     updateSectionTitle('hybrid-title', 'hybrid');
