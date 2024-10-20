@@ -101,6 +101,10 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
+        .promo-section ul li {
+            animation: glitchEffect 3s infinite;
+        }
+
         .menu-section ul li span {
             color: #FFFFFF;
         }
@@ -116,15 +120,18 @@
         .promo-section {
             grid-column: 1 / span 3;
             background-color: rgba(51, 51, 51, 0);
-            animation: promoGlitch 2s infinite;
         }
         .promo-section h2 {
             text-align: center;
         }
 
-        @keyframes promoGlitch {
-            0%, 100% { text-shadow: 0 0 10px black, 0 0 20px black; color: black; }
-            50% { text-shadow: 0 0 10px green, 0 0 20px green; color: green; }
+        @keyframes glitchEffect {
+            0% { text-shadow: 2px 2px 0 #0000FF, -2px -2px 0 #00FF00; }
+            20% { text-shadow: -2px -2px 0 #0000FF, 2px 2px 0 #00FF00; }
+            40% { text-shadow: 2px -2px 0 #00FF00, -2px 2px 0 #0000FF; }
+            60% { text-shadow: -2px 2px 0 #0000FF, 2px -2px 0 #00FF00; }
+            80% { text-shadow: 2px 2px 0 #00FF00, -2px -2px 0 #0000FF; }
+            100% { text-shadow: -2px -2px 0 #00FF00, 2px 2px 0 #0000FF; }
         }
 
         /* Highlight animation for top items */
@@ -132,54 +139,84 @@
             background-color: rgba(0, 255, 0, 0.2);
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
             font-weight: bold;
-            transition: background-color 0.5s ease, box-shadow 0.5s ease;
+            animation: highlightFade 6s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
+        }
+
+        @keyframes highlightFade {
+            0%, 100% {
+                background-color: rgba(0, 255, 0, 0.2);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+                opacity: 1;
+            }
+            25%, 75% {
+                background-color: rgba(0, 255, 0, 0);
+                box-shadow: 0 0 0 rgba(0, 255, 0, 0);
+                opacity: 0.5;
+            }
+            50% {
+                background-color: rgba(0, 255, 0, 0);
+                box-shadow: 0 0 0 rgba(0, 255, 0, 0);
+                opacity: 0;
+            }
         }
 
         /* Pulse effect */
         .pulse {
-            animation: pulseEffect 2s infinite;
+            animation: pulseEffect 3s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
         }
 
         @keyframes pulseEffect {
             0% {
                 transform: scale(1);
+                opacity: 1;
             }
             50% {
                 transform: scale(1.05);
+                opacity: 0.7;
             }
             100% {
                 transform: scale(1);
+                opacity: 1;
             }
         }
 
         /* Glow effect */
         .glow {
-            animation: glowEffect 1.5s ease-in-out infinite alternate;
+            animation: glowEffect 4s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
         }
 
         @keyframes glowEffect {
             0% {
                 box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+                opacity: 1;
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 0, 1);
+                opacity: 0.7;
             }
             100% {
-                box-shadow: 0 0 20px rgba(0, 255, 0, 1);
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+                opacity: 1;
             }
         }
 
         /* Float effect */
         .float {
-            animation: floatEffect 3s ease-in-out infinite;
+            animation: floatEffect 5s cubic-bezier(0.25, 1, 0.5, 1) infinite alternate;
         }
 
         @keyframes floatEffect {
             0% {
                 transform: translateY(0);
+                opacity: 1;
             }
             50% {
                 transform: translateY(-5px);
+                opacity: 0.8;
             }
             100% {
                 transform: translateY(0);
+                opacity: 1;
             }
         }
 
@@ -316,29 +353,29 @@
                     const maxPrice = Math.max(...Array.from(items).map(item => parseFloat(item.querySelector('.price').textContent)));
                     const topItems = Array.from(items).filter(item => parseFloat(item.querySelector('.price').textContent) === maxPrice);
 
-                    // Randomizza l'evidenziazione per ogni topItem
+                    // Randomizza l'evidenziazione per ogni topItem con maggiore randomicità
                     topItems.forEach((topItem, index) => {
                         setTimeout(() => {
                             topItem.classList.add('highlight', 'pulse', 'glow', 'float');
-                        }, Math.random() * 2000 + (index * 1000));
+                        }, Math.random() * 4000 + (index * 1500));
                     });
                 } else {
-                    // Sezione Calipacks e TopWeed: applica animazione a tutte le voci
+                    // Sezione Calipacks e TopWeed: applica animazione a tutte le voci con maggiore randomicità
                     items.forEach((item, index) => {
                         setTimeout(() => {
                             item.classList.add('highlight', 'pulse', 'glow', 'float');
-                        }, Math.random() * 2000 + (index * 1000));
+                        }, Math.random() * 4000 + (index * 1500));
                     });
                 }
             }
         });
     }
 
-    // Intervallo per cambiare l'evidenziazione ogni 3-8 secondi
+    // Intervallo per cambiare l'evidenziazione ogni 5-10 secondi con maggiore randomicità
     function startRandomHighlighting() {
         setInterval(() => {
             highlightRandomItems();
-        }, Math.floor(Math.random() * (8000 - 3000) + 3000));
+        }, Math.floor(Math.random() * (10000 - 5000) + 5000));
     }
 
     // Avvia l'evidenziazione dopo il caricamento dei dati
