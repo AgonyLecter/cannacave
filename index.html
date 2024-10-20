@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CannaCave Menu</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fjalla+One&family=Roboto:wght@300;400;500&display=swap');
+        @font-face {
+            font-family: 'SweetLeaf';
+            src: url('SweetLeaf.ttf') format('truetype');
+        }
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +17,7 @@
         body, html {
             height: 100%;
             width: 100%;
-            font-family: 'Roboto', sans-serif;
+            font-family: 'SweetLeaf', cursive, 'Roboto', sans-serif;
             color: #fff;
             overflow: hidden;
         }
@@ -59,15 +62,24 @@
         .header {
             text-align: center;
             margin-bottom: 10px;
+            position: relative;
         }
 
         .header h1 {
-            font-family: 'Fjalla One', sans-serif;
+            font-family: 'SweetLeaf', cursive, 'Fjalla One', sans-serif;
             font-size: 3rem;
             color: #00FF00;
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
             animation: glowAnimation 3s ease-in-out infinite alternate;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .header .cannabis-icon {
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
         }
 
         @keyframes glowAnimation {
@@ -101,8 +113,90 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
+        /* Glitch Effect for Promo Section */
         .promo-section ul li {
-            animation: glitchEffect 3s infinite;
+            position: relative;
+            animation: glitchEffect 2s infinite;
+        }
+
+        .promo-section ul li::before, .promo-section ul li::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            color: #ff00ff;
+            background: transparent;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+            animation: glitchClip 2s infinite linear alternate-reverse;
+        }
+
+        .promo-section ul li::after {
+            left: 2px;
+            text-shadow: -2px 0 #00ff00;
+            animation: glitchClip 3s infinite linear alternate-reverse;
+        }
+
+        .promo-section ul li span.price {
+            position: relative;
+            animation: glitchEffect 2s infinite;
+        }
+
+        .promo-section ul li span.price::before, .promo-section ul li span.price::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+            color: #ff00ff;
+            background: transparent;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+            animation: glitchClip 2s infinite linear alternate-reverse;
+        }
+
+        .promo-section ul li span.price::after {
+            left: 2px;
+            text-shadow: -2px 0 #00ff00;
+            animation: glitchClip 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitchEffect {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitchClip {
+            0% { clip: rect(42px, 9999px, 44px, 0); }
+            5% { clip: rect(12px, 9999px, 20px, 0); }
+            10% { clip: rect(32px, 9999px, 38px, 0); }
+            15% { clip: rect(72px, 9999px, 80px, 0); }
+            20% { clip: rect(52px, 9999px, 58px, 0); }
+            25% { clip: rect(12px, 9999px, 20px, 0); }
+            30% { clip: rect(82px, 9999px, 88px, 0); }
+            35% { clip: rect(22px, 9999px, 30px, 0); }
+            40% { clip: rect(42px, 9999px, 44px, 0); }
+            45% { clip: rect(12px, 9999px, 20px, 0); }
+            50% { clip: rect(32px, 9999px, 38px, 0); }
+            55% { clip: rect(72px, 9999px, 80px, 0); }
+            60% { clip: rect(52px, 9999px, 58px, 0); }
+            65% { clip: rect(12px, 9999px, 20px, 0); }
+            70% { clip: rect(82px, 9999px, 88px, 0); }
+            75% { clip: rect(22px, 9999px, 30px, 0); }
+            80% { clip: rect(42px, 9999px, 44px, 0); }
+            85% { clip: rect(12px, 9999px, 20px, 0); }
+            90% { clip: rect(32px, 9999px, 38px, 0); }
+            95% { clip: rect(72px, 9999px, 80px, 0); }
+            100% { clip: rect(52px, 9999px, 58px, 0); }
         }
 
         .menu-section ul li span {
@@ -123,15 +217,6 @@
         }
         .promo-section h2 {
             text-align: center;
-        }
-
-        @keyframes glitchEffect {
-            0% { text-shadow: 2px 2px 0 #0000FF, -2px -2px 0 #00FF00; }
-            20% { text-shadow: -2px -2px 0 #0000FF, 2px 2px 0 #00FF00; }
-            40% { text-shadow: 2px -2px 0 #00FF00, -2px 2px 0 #0000FF; }
-            60% { text-shadow: -2px 2px 0 #0000FF, 2px -2px 0 #00FF00; }
-            80% { text-shadow: 2px 2px 0 #00FF00, -2px -2px 0 #0000FF; }
-            100% { text-shadow: -2px -2px 0 #00FF00, 2px 2px 0 #0000FF; }
         }
 
         /* Highlight animation for top items */
@@ -234,7 +319,11 @@
 
 <div class="menu-container">
     <div class="header">
-        <h1>The Canna Cave</h1>
+        <h1>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Cannabis_leaf.svg" alt="Cannabis Leaf" class="cannabis-icon">
+            The Canna Cave
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Cannabis_leaf.svg" alt="Cannabis Leaf" class="cannabis-icon">
+        </h1>
     </div>
 
     <div class="menu-grid">
@@ -303,7 +392,7 @@
                 }));
                 items.sort((a, b) => b.price - a.price);
                 items.forEach(item => {
-                    sectionList.innerHTML += `<li><span>${item.name}</span> <span class="price">${item.price} pts</span></li>`;
+                    sectionList.innerHTML += `<li data-text="${item.name}"><span>${item.name}</span> <span class="price glitch-price" data-text="${item.price} pts">${item.price} pts</span></li>`;
                 });
             } else {
                 sectionList.innerHTML += '<li>No strains available</li>';
@@ -386,7 +475,6 @@
 
 </body>
 </html>
-
 
 
 
