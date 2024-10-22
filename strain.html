@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CannaCave WikiWeed</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             background-color: #121212;
@@ -40,10 +41,32 @@
             width: 90%;
             max-width: 800px;
         }
+        .results-container {
+            margin-top: 2em;
+            padding: 1em;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 800px;
+            display: none;
+        }
         footer {
             margin-top: 4em;
             font-size: 0.85em;
             color: #aaa;
+        }
+        .breadcrumb {
+            margin: 1em 0;
+            color: #8a8a8a;
+            font-size: 0.9em;
+        }
+        .breadcrumb a {
+            color: #32e875;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
         }
         @media (max-width: 600px) {
             h1 {
@@ -69,33 +92,45 @@
     <h1>CannaCave WikiWeed</h1>
     <div class="search-box">
         <div class="search-container">
-            <p>Cerca informazioni dettagliate sugli strain di cannabis.</p>
+            <p>Search for detailed information on cannabis strains by name, origin, and THC content.</p>
             <div class="gcse-search"></div>
-            <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Torna alla Ricerca</button>
+            <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Back to Search</button>
         </div>
     </div>
+    <div class="results-container" id="resultsContainer">
+        <div id="breadcrumb" class="breadcrumb">
+            <a href="#" id="searchAgain">Home</a> / Search Results
+        </div>
+        <div id="strainInfo"></div>
+    </div>
     <footer>
-        <p>&copy; 2024 CannaCave. Tutti i diritti riservati.</p>
+        <p>&copy; 2024 CannaCave. All rights reserved.</p>
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var searchBox = document.querySelector(".gcse-search");
             if (!searchBox) {
-                console.error("Motore di ricerca non trovato.");
+                console.error("Search engine not found.");
             }
 
-            // Aggiungi un listener per tornare alla pagina di ricerca
+            // Add a listener for returning to the search page
             document.getElementById("backToSearch").addEventListener("click", function() {
                 var searchResults = document.querySelector(".gsc-resultsbox-visible");
                 if (searchResults) {
                     searchResults.classList.remove("gsc-resultsbox-visible");
                 }
                 this.style.display = "none";
+                document.getElementById("resultsContainer").style.display = "none";
+            });
+
+            document.getElementById("searchAgain").addEventListener("click", function() {
+                document.getElementById("resultsContainer").style.display = "none";
+                document.querySelector(".search-container").style.display = "block";
             });
         });
 
         window.addEventListener("load", function() {
-            // Aggiungi pulsante per tornare alla ricerca se ci sono risultati visibili
+            // Add button to return to search if there are visible results
             document.addEventListener("click", function() {
                 setTimeout(function() {
                     var searchResults = document.querySelector(".gsc-resultsbox-visible");
@@ -109,15 +144,56 @@
             });
         });
 
-        // Personalizza i filtri di ricerca per includere solo informazioni specifiche sugli strain
+        // Customize search filters to only include genetic strains, origin, and THC content
         function customizeSearchFilters() {
             var searchBoxElement = document.querySelector(".gsc-input");
             if (searchBoxElement) {
-                searchBoxElement.placeholder = "Cerca strain di cannabis per mix, provenienza e percentuale THC";
+                searchBoxElement.placeholder = "Search cannabis strain by name, genetics, origin, and THC percentage";
             }
         }
 
         document.addEventListener("gsc-render", customizeSearchFilters);
+
+        // D3.js Visualization for Results
+        function visualizeStrainData(data) {
+            var container = d3.select("#strainInfo");
+            container.html(""); // Clear previous content
+
+            data.forEach(function(strain) {
+                var strainCard = container.append("div")
+                    .style("background-color", "#333")
+                    .style("padding", "1em")
+                    .style("margin", "1em 0")
+                    .style("border-radius", "10px")
+                    .style("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
+
+                strainCard.append("h2")
+                    .text(strain.name)
+                    .style("color", "#32e875");
+
+                strainCard.append("p")
+                    .html("<strong>Origin:</strong> " + strain.origin);
+
+                strainCard.append("p")
+                    .html("<strong>Genetics:</strong> " + strain.genetics);
+
+                strainCard.append("p")
+                    .html("<strong>THC Content:</strong> " + strain.thc + "%");
+            });
+        }
+
+        // Example data for visualization (this should come from an API or database in real implementation)
+        var exampleStrainData = [
+            { name: "Alien Cookies", origin: "USA", genetics: "Indica Hybrid", thc: 25 },
+            { name: "Blue Dream", origin: "California", genetics: "Sativa Dominant Hybrid", thc: 18 },
+            { name: "OG Kush", origin: "USA", genetics: "Hybrid", thc: 20 }
+        ];
+
+        document.addEventListener("gsc-results", function() {
+            document.querySelector(".search-container").style.display = "none";
+            document.getElementById("resultsContainer").style.display = "block";
+            visualizeStrainData(exampleStrainData);
+        });
     </script>
 </body>
 </html>
