@@ -50,6 +50,11 @@
             transform: scale(1.03);
             box-shadow: 0 0 30px rgba(50, 232, 117, 0.5);
         }
+        .chart-container {
+            margin-top: 3em;
+            width: 90%;
+            max-width: 800px;
+        }
         footer {
             margin-top: 4em;
             font-size: 0.85em;
@@ -72,10 +77,23 @@
             50% { opacity: 0.5; text-shadow: 0 0 20px #32e875; }
             100% { opacity: 1; text-shadow: 0 0 10px #000; }
         }
+        .home-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background-color: #32e875;
+            color: #fff;
+            padding: 0.5em;
+            border-radius: 5px;
+            text-decoration: none;
+            z-index: 100;
+        }
     </style>
     <script async src="https://cse.google.com/cse.js?cx=81755b620d31d446b"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <a href="index.html" class="home-button">&#x1F3E0; Home</a>
     <img src="joint.webp" alt="CannaCave Logo" class="logo">
     <h1>CannaCave WikiWeed</h1>
     <div class="search-box">
@@ -84,6 +102,9 @@
             <div class="gcse-search"></div>
             <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Torna alla Ricerca</button>
         </div>
+    </div>
+    <div class="chart-container">
+        <canvas id="thcChart" width="400" height="200"></canvas>
     </div>
     <footer>
         <p>&copy; 2024 CannaCave. Tutti i diritti riservati.</p>
@@ -95,7 +116,6 @@
                 console.error("Motore di ricerca non trovato.");
             }
 
-            // Aggiungi un listener per tornare alla pagina di ricerca
             document.getElementById("backToSearch").addEventListener("click", function() {
                 var searchResults = document.querySelector(".gsc-resultsbox-visible");
                 if (searchResults) {
@@ -103,25 +123,59 @@
                 }
                 this.style.display = "none";
             });
-        });
 
-        window.addEventListener("load", function() {
-            // Aggiungi pulsante per tornare alla ricerca se ci sono risultati visibili
-            document.addEventListener("click", function() {
-                setTimeout(function() {
-                    var searchResults = document.querySelector(".gsc-resultsbox-visible");
-                    var backToSearchButton = document.getElementById("backToSearch");
-                    if (searchResults) {
-                        backToSearchButton.style.display = "inline-block";
-                    } else {
-                        backToSearchButton.style.display = "none";
+            // Aggiungi grafico interattivo
+            var ctx = document.getElementById('thcChart').getContext('2d');
+            var thcChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'THC (%)',
+                        data: [],
+                        backgroundColor: 'rgba(50, 232, 117, 0.5)',
+                        borderColor: 'rgba(50, 232, 117, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
                     }
-                }, 500);
+                }
+            });
+
+            // Funzione per aggiornare il grafico con i dati ottenuti
+            function aggiornaGraficoTHC(nomiStrain, valoriTHC) {
+                thcChart.data.labels = nomiStrain;
+                thcChart.data.datasets[0].data = valoriTHC;
+                thcChart.update();
+            }
+
+            // Esempio di aggiornamento dati (da implementare con il parsing dei risultati di ricerca)
+            aggiornaGraficoTHC(['Strain A', 'Strain B', 'Strain C'], [20, 25, 18]);
+
+            window.addEventListener("load", function() {
+                document.addEventListener("click", function() {
+                    setTimeout(function() {
+                        var searchResults = document.querySelector(".gsc-resultsbox-visible");
+                        var backToSearchButton = document.getElementById("backToSearch");
+                        if (searchResults) {
+                            backToSearchButton.style.display = "inline-block";
+                        } else {
+                            backToSearchButton.style.display = "none";
+                        }
+                    }, 500);
+                });
             });
         });
     </script>
 </body>
 </html>
+
 
 
 
