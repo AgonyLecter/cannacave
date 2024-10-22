@@ -108,8 +108,19 @@
                 }, 500);
             });
         });
+
+        // Personalizza i filtri di ricerca per includere solo informazioni specifiche sugli strain
+        function customizeSearchFilters() {
+            var searchBoxElement = document.querySelector(".gsc-input");
+            if (searchBoxElement) {
+                searchBoxElement.placeholder = "Cerca strain di cannabis per mix, provenienza e percentuale THC";
+            }
+        }
+
+        document.addEventListener("gsc-render", customizeSearchFilters);
     </script>
 </body>
 </html>
+
 
 
