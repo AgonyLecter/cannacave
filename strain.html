@@ -14,15 +14,13 @@
             margin: 0;
         }
         h1 {
-            font-size: 3em;
-            margin-top: 1.5em;
+            font-size: 2.5em;
+            margin-top: 1em;
             color: #32e875;
-            text-shadow: 3px 3px 10px #000;
-            animation: fadeInGlow 3s ease-in-out;
         }
         .logo {
             margin-top: 1em;
-            max-width: 200px;
+            max-width: 150px;
             height: auto;
         }
         .search-box {
@@ -30,7 +28,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            margin-top: 2.5em;
+            margin-top: 2em;
         }
         .gcse-search {
             width: 100%;
@@ -39,53 +37,32 @@
         }
         .search-container {
             background-color: #222;
-            padding: 1.5em;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+            padding: 1em;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 90%;
             max-width: 800px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .search-container:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 30px rgba(50, 232, 117, 0.5);
         }
         .chart-container {
-            margin-top: 3em;
+            margin-top: 2em;
             width: 90%;
             max-width: 800px;
         }
         footer {
-            margin-top: 4em;
-            font-size: 0.85em;
+            margin-top: 2em;
+            font-size: 0.75em;
             color: #aaa;
-        }
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2.5em;
-            }
-            .search-container {
-                width: 95%;
-                margin-top: 1.5em;
-            }
-            footer {
-                font-size: 0.75em;
-            }
-        }
-        @keyframes fadeInGlow {
-            0% { opacity: 0; text-shadow: 0 0 5px #000; }
-            50% { opacity: 0.5; text-shadow: 0 0 20px #32e875; }
-            100% { opacity: 1; text-shadow: 0 0 10px #000; }
         }
         .home-button {
             position: fixed;
             top: 10px;
-            left: 10px;
+            right: 10px;
             background-color: #32e875;
             color: #fff;
             padding: 0.5em;
             border-radius: 5px;
             text-decoration: none;
+            cursor: pointer;
             z-index: 100;
         }
     </style>
@@ -93,14 +70,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <a href="index.html" class="home-button">&#x1F3E0; Home</a>
+    <button class="home-button" id="clearResults">&#x1F3E0; Home</button>
     <img src="joint.webp" alt="CannaCave Logo" class="logo">
     <h1>CannaCave WikiWeed</h1>
     <div class="search-box">
         <div class="search-container">
-            <p>Cerca informazioni dettagliate sugli strain di cannabis.</p>
+            <p>Cerca informazioni sugli strain di cannabis.</p>
             <div class="gcse-search"></div>
-            <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Torna alla Ricerca</button>
         </div>
     </div>
     <div class="chart-container">
@@ -111,20 +87,15 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            var searchBox = document.querySelector(".gcse-search");
-            if (!searchBox) {
-                console.error("Motore di ricerca non trovato.");
-            }
+            var clearResultsButton = document.getElementById("clearResults");
 
-            document.getElementById("backToSearch").addEventListener("click", function() {
+            clearResultsButton.addEventListener("click", function() {
                 var searchResults = document.querySelector(".gsc-resultsbox-visible");
                 if (searchResults) {
                     searchResults.classList.remove("gsc-resultsbox-visible");
                 }
-                this.style.display = "none";
             });
 
-            // Aggiungi grafico interattivo
             var ctx = document.getElementById('thcChart').getContext('2d');
             var thcChart = new Chart(ctx, {
                 type: 'bar',
@@ -140,6 +111,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -148,33 +120,45 @@
                 }
             });
 
-            // Funzione per aggiornare il grafico con i dati ottenuti
+            // Funzione per aggiornare il grafico con i dati
             function aggiornaGraficoTHC(nomiStrain, valoriTHC) {
                 thcChart.data.labels = nomiStrain;
                 thcChart.data.datasets[0].data = valoriTHC;
                 thcChart.update();
             }
 
-            // Esempio di aggiornamento dati (da implementare con il parsing dei risultati di ricerca)
-            aggiornaGraficoTHC(['Strain A', 'Strain B', 'Strain C'], [20, 25, 18]);
-
+            // Monitorare i risultati di ricerca per aggiornare il grafico
             window.addEventListener("load", function() {
                 document.addEventListener("click", function() {
                     setTimeout(function() {
-                        var searchResults = document.querySelector(".gsc-resultsbox-visible");
-                        var backToSearchButton = document.getElementById("backToSearch");
-                        if (searchResults) {
-                            backToSearchButton.style.display = "inline-block";
-                        } else {
-                            backToSearchButton.style.display = "none";
+                        var searchResults = document.querySelectorAll(".gsc-webResult.gsc-result");
+                        var nomiStrain = [];
+                        var valoriTHC = [];
+
+                        searchResults.forEach(function(result) {
+                            var titolo = result.querySelector(".gs-title")?.innerText;
+                            var descrizione = result.querySelector(".gs-bidi-start-align")?.innerText;
+
+                            if (titolo && descrizione) {
+                                var match = descrizione.match(/THC\s*:\s*(\d+)%/i);
+                                if (match) {
+                                    nomiStrain.push(titolo);
+                                    valoriTHC.push(parseInt(match[1]));
+                                }
+                            }
+                        });
+
+                        if (nomiStrain.length > 0 && valoriTHC.length > 0) {
+                            aggiornaGraficoTHC(nomiStrain, valoriTHC);
                         }
-                    }, 500);
+                    }, 1000);
                 });
             });
         });
     </script>
 </body>
 </html>
+
 
 
 
