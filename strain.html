@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CannaCave WikiWeed</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             background-color: #121212;
@@ -20,6 +19,11 @@
             color: #32e875;
             text-shadow: 3px 3px 10px #000;
             animation: fadeInGlow 3s ease-in-out;
+        }
+        .logo {
+            margin-top: 1em;
+            max-width: 200px;
+            height: auto;
         }
         .search-box {
             display: flex;
@@ -40,33 +44,16 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
             width: 90%;
             max-width: 800px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .results-container {
-            margin-top: 2em;
-            padding: 1em;
-            background-color: #2a2a2a;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 800px;
-            display: none;
+        .search-container:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(50, 232, 117, 0.5);
         }
         footer {
             margin-top: 4em;
             font-size: 0.85em;
             color: #aaa;
-        }
-        .breadcrumb {
-            margin: 1em 0;
-            color: #8a8a8a;
-            font-size: 0.9em;
-        }
-        .breadcrumb a {
-            color: #32e875;
-            text-decoration: none;
-        }
-        .breadcrumb a:hover {
-            text-decoration: underline;
         }
         @media (max-width: 600px) {
             h1 {
@@ -89,48 +76,37 @@
     <script async src="https://cse.google.com/cse.js?cx=81755b620d31d446b"></script>
 </head>
 <body>
+    <img src="logo.webp" alt="CannaCave Logo" class="logo">
     <h1>CannaCave WikiWeed</h1>
     <div class="search-box">
         <div class="search-container">
-            <p>Search for detailed information on cannabis strains by name, origin, and THC content.</p>
+            <p>Cerca informazioni dettagliate sugli strain di cannabis.</p>
             <div class="gcse-search"></div>
-            <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Back to Search</button>
+            <button id="backToSearch" style="display:none; margin-top: 1em; padding: 0.5em 1em; border: none; background-color: #32e875; color: #fff; border-radius: 5px; cursor: pointer;">Torna alla Ricerca</button>
         </div>
-    </div>
-    <div class="results-container" id="resultsContainer">
-        <div id="breadcrumb" class="breadcrumb">
-            <a href="#" id="searchAgain">Home</a> / Search Results
-        </div>
-        <div id="strainInfo"></div>
     </div>
     <footer>
-        <p>&copy; 2024 CannaCave. All rights reserved.</p>
+        <p>&copy; 2024 CannaCave. Tutti i diritti riservati.</p>
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var searchBox = document.querySelector(".gcse-search");
             if (!searchBox) {
-                console.error("Search engine not found.");
+                console.error("Motore di ricerca non trovato.");
             }
 
-            // Add a listener for returning to the search page
+            // Aggiungi un listener per tornare alla pagina di ricerca
             document.getElementById("backToSearch").addEventListener("click", function() {
                 var searchResults = document.querySelector(".gsc-resultsbox-visible");
                 if (searchResults) {
                     searchResults.classList.remove("gsc-resultsbox-visible");
                 }
                 this.style.display = "none";
-                document.getElementById("resultsContainer").style.display = "none";
-            });
-
-            document.getElementById("searchAgain").addEventListener("click", function() {
-                document.getElementById("resultsContainer").style.display = "none";
-                document.querySelector(".search-container").style.display = "block";
             });
         });
 
         window.addEventListener("load", function() {
-            // Add button to return to search if there are visible results
+            // Aggiungi pulsante per tornare alla ricerca se ci sono risultati visibili
             document.addEventListener("click", function() {
                 setTimeout(function() {
                     var searchResults = document.querySelector(".gsc-resultsbox-visible");
@@ -143,60 +119,10 @@
                 }, 500);
             });
         });
-
-        // Customize search filters to only include genetic strains, origin, and THC content
-        function customizeSearchFilters() {
-            var searchBoxElement = document.querySelector(".gsc-input");
-            if (searchBoxElement) {
-                searchBoxElement.placeholder = "Search cannabis strain by name, genetics, origin, and THC percentage";
-            }
-        }
-
-        document.addEventListener("gsc-render", customizeSearchFilters);
-
-        // D3.js Visualization for Results
-        function visualizeStrainData(data) {
-            var container = d3.select("#strainInfo");
-            container.html(""); // Clear previous content
-
-            data.forEach(function(strain) {
-                var strainCard = container.append("div")
-                    .style("background-color", "#333")
-                    .style("padding", "1em")
-                    .style("margin", "1em 0")
-                    .style("border-radius", "10px")
-                    .style("box-shadow", "0 0 10px rgba(0, 0, 0, 0.5)");
-
-                strainCard.append("h2")
-                    .text(strain.name)
-                    .style("color", "#32e875");
-
-                strainCard.append("p")
-                    .html("<strong>Origin:</strong> " + strain.origin);
-
-                strainCard.append("p")
-                    .html("<strong>Genetics:</strong> " + strain.genetics);
-
-                strainCard.append("p")
-                    .html("<strong>THC Content:</strong> " + strain.thc + "%");
-            });
-        }
-
-        // Example data for visualization (this should come from an API or database in real implementation)
-        var exampleStrainData = [
-            { name: "Alien Cookies", origin: "USA", genetics: "Indica Hybrid", thc: 25 },
-            { name: "Blue Dream", origin: "California", genetics: "Sativa Dominant Hybrid", thc: 18 },
-            { name: "OG Kush", origin: "USA", genetics: "Hybrid", thc: 20 }
-        ];
-
-        document.addEventListener("gsc-results", function() {
-            document.querySelector(".search-container").style.display = "none";
-            document.getElementById("resultsContainer").style.display = "block";
-            visualizeStrainData(exampleStrainData);
-        });
     </script>
 </body>
 </html>
+
 
 
 
