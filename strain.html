@@ -1,160 +1,122 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CannaCave WikiWeed</title>
     <style>
         body {
-            background-color: #000000;
-            color: #e0e0e0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #e8f5e9; /* Colore di sfondo verde chiaro */
+            color: #2e7d32; /* Colore del testo verde scuro */
+        }
+
+        header {
             text-align: center;
-            padding: 0;
-            margin: 0;
+            padding: 20px;
+            background-color: #1b5e20; /* Verde scuro */
+            color: white;
         }
-        h1 {
-            font-size: 2.5em;
-            margin-top: 1em;
-            color: #32e875;
-        }
-        .logo {
-            margin-top: 1em;
-            max-width: 150px;
-            height: auto;
-        }
-        .search-box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            margin-top: 2em;
-        }
-        .gcse-search {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 1em;
-        }
-        .search-container {
-            background-color: #222;
-            padding: 1em;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 800px;
-        }
-        .chart-container {
-            margin-top: 2em;
-            width: 90%;
-            max-width: 800px;
-        }
-        footer {
-            margin-top: 2em;
-            font-size: 0.75em;
-            color: #aaa;
-        }
-        .home-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #32e875;
-            color: #fff;
-            padding: 0.5em;
+
+        #searchBox {
+            width: 80%;
+            padding: 10px;
+            margin-top: 20px;
             border-radius: 5px;
-            text-decoration: none;
+            border: 1px solid #4caf50; /* Verde */
+        }
+
+        #content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .strain {
+            background-color: white;
+            border: 1px solid #4caf50; /* Verde */
+            border-radius: 5px;
+            margin: 10px;
+            padding: 20px;
+            width: 220px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .strain:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .reset-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #2e7d32; /* Verde scuro */
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            z-index: 100;
+        }
+
+        .reset-button:hover {
+            background-color: #1b5e20; /* Verde più scuro */
         }
     </style>
-    <script async src="https://cse.google.com/cse.js?cx=81755b620d31d446b"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <button class="home-button" id="clearResults">&#x1F3E0; Home</button>
-    <img src="joint.webp" alt="CannaCave Logo" class="logo">
-    <h1>CannaCave WikiWeed</h1>
-    <div class="search-box">
-        <div class="search-container">
-            <p>Cerca informazioni sugli strain di cannabis.</p>
-            <div class="gcse-search"></div>
-        </div>
-    </div>
-    <div class="chart-container">
-        <canvas id="thcChart" width="400" height="200"></canvas>
-    </div>
-    <footer>
-        <p>&copy; 2024 CannaCave. Tutti i diritti riservati.</p>
-    </footer>
+    <header>
+        <h1>CannaCave WikiWeed</h1>
+        <input type="text" id="searchBox" placeholder="Cerca strain..." oninput="filterStrains()">
+        <button class="reset-button" onclick="resetSearch()">Reset Ricerca</button>
+    </header>
+    <main id="content">
+        <div id="strainList"></div>
+    </main>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var clearResultsButton = document.getElementById("clearResults");
+        let strains = [];
 
-            clearResultsButton.addEventListener("click", function() {
-                var searchResults = document.querySelector(".gsc-resultsbox-visible");
-                if (searchResults) {
-                    searchResults.classList.remove("gsc-resultsbox-visible");
-                }
+        // Carica il file JSON
+        fetch('strain.json')
+            .then(response => response.json())
+            .then(data => {
+                strains = data;
+                displayStrains(strains);
+            })
+            .catch(error => console.error('Errore nel caricamento del file JSON:', error));
+
+        // Funzione per visualizzare gli strain
+        function displayStrains(strains) {
+            const strainList = document.getElementById('strainList');
+            strainList.innerHTML = '';
+
+            strains.forEach(strain => {
+                const strainElement = document.createElement('div');
+                strainElement.className = 'strain';
+                strainElement.innerHTML = `
+                    <h3>${strain.name}</h3>
+                    <p>Tipo: ${strain.type}</p>
+                    <p>THC: ${strain.thc}%</p>
+                    <p>CBD: ${strain.cbd}%</p>
+                `;
+                strainList.appendChild(strainElement);
             });
+        }
 
-            var ctx = document.getElementById('thcChart').getContext('2d');
-            var thcChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'THC (%)',
-                        data: [],
-                        backgroundColor: 'rgba(50, 232, 117, 0.5)',
-                        borderColor: 'rgba(50, 232, 117, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+        // Funzione per filtrare gli strain in base alla ricerca
+        function filterStrains() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const filteredStrains = strains.filter(strain =>
+                strain.name.toLowerCase().includes(searchTerm)
+            );
+            displayStrains(filteredStrains);
+        }
 
-            // Funzione per aggiornare il grafico con i dati
-            function aggiornaGraficoTHC(nomiStrain, valoriTHC) {
-                thcChart.data.labels = nomiStrain;
-                thcChart.data.datasets[0].data = valoriTHC;
-                thcChart.update();
-            }
-
-            // Monitorare i risultati di ricerca per aggiornare il grafico
-            window.addEventListener("load", function() {
-                document.addEventListener("click", function() {
-                    setTimeout(function() {
-                        var searchResults = document.querySelectorAll(".gsc-webResult.gsc-result");
-                        var nomiStrain = [];
-                        var valoriTHC = [];
-
-                        searchResults.forEach(function(result) {
-                            var titolo = result.querySelector(".gs-title")?.innerText;
-                            var descrizione = result.querySelector(".gs-bidi-start-align")?.innerText;
-
-                            if (titolo && descrizione) {
-                                var match = descrizione.match(/THC\s*:\s*(\d+)%/i);
-                                if (match) {
-                                    nomiStrain.push(titolo);
-                                    valoriTHC.push(parseInt(match[1]));
-                                }
-                            }
-                        });
-
-                        if (nomiStrain.length > 0 && valoriTHC.length > 0) {
-                            aggiornaGraficoTHC(nomiStrain, valoriTHC);
-                        }
-                    }, 1000);
-                });
-            });
-        });
+        // Funzione per resettare la ricerca
+        function resetSearch() {
+            document.getElementById('searchBox').value = '';
+            displayStrains(strains);
+        }
     </script>
 </body>
 </html>
