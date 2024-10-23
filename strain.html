@@ -9,6 +9,8 @@
             font-family: Arial, sans-serif;
             background-color: #e8f5e9; /* Colore di sfondo verde chiaro */
             color: #2e7d32; /* Colore del testo verde scuro */
+            margin: 0;
+            padding: 0;
         }
 
         header {
@@ -16,12 +18,15 @@
             padding: 20px;
             background-color: #1b5e20; /* Verde scuro */
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         #searchBox {
-            width: 80%;
+            width: 90%;
             padding: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
             border-radius: 5px;
             border: 1px solid #4caf50; /* Verde */
         }
@@ -39,14 +44,15 @@
             border-radius: 5px;
             margin: 10px;
             padding: 20px;
-            width: 220px;
+            width: 300px;
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .strain:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .strain img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
         }
 
         .reset-button {
@@ -95,9 +101,11 @@
                 strainElement.className = 'strain';
                 strainElement.innerHTML = `
                     <h3>${strain.name}</h3>
+                    <img src="${strain.img_url || 'https://via.placeholder.com/300'}" alt="${strain.name}">
                     <p>Tipo: ${strain.type}</p>
-                    <p>THC: ${strain.thc}%</p>
-                    <p>CBD: ${strain.cbd}%</p>
+                    <p>THC: ${strain.thc_level}</p>
+                    <p>Terpene comune: ${strain.most_common_terpene}</p>
+                    <p>${strain.description}</p>
                 `;
                 strainList.appendChild(strainElement);
             });
@@ -120,6 +128,7 @@
     </script>
 </body>
 </html>
+
 
 
 
