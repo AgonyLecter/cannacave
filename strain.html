@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CannaCave WikiWeed</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/css/autoComplete.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e8f5e9; /* Colore di sfondo verde chiaro */
-            color: #2e7d32; /* Colore del testo verde scuro */
+            background-color: #e8f5e9;
+            color: #2e7d32;
             margin: 0;
             padding: 0;
         }
@@ -16,7 +17,7 @@
         header {
             text-align: center;
             padding: 20px;
-            background-color: #1b5e20; /* Verde scuro */
+            background-color: #1b5e20;
             color: white;
             position: sticky;
             top: 0;
@@ -28,7 +29,7 @@
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
-            border: 1px solid #4caf50; /* Verde */
+            border: 1px solid #4caf50;
         }
 
         #content {
@@ -40,7 +41,7 @@
 
         .strain {
             background-color: white;
-            border: 1px solid #4caf50; /* Verde */
+            border: 1px solid #4caf50;
             border-radius: 5px;
             margin: 10px;
             padding: 20px;
@@ -58,7 +59,7 @@
         .reset-button {
             margin-top: 10px;
             padding: 10px 20px;
-            background-color: #2e7d32; /* Verde scuro */
+            background-color: #2e7d32;
             color: white;
             border: none;
             border-radius: 5px;
@@ -66,7 +67,7 @@
         }
 
         .reset-button:hover {
-            background-color: #1b5e20; /* Verde più scuro */
+            background-color: #1b5e20;
         }
     </style>
 </head>
@@ -79,24 +80,29 @@
     <main id="content">
         <div id="strainList"></div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6/dist/fuse.min.js"></script>
     <script>
         let strains = [];
 
         // Carica il file JSON
-        fetch('strain.json')
-            .then(response => response.json())
-            .then(data => {
-                strains = data;
+        async function loadStrains() {
+            try {
+                const response = await fetch('strain.json');
+                strains = await response.json();
                 displayStrains(strains);
-            })
-            .catch(error => console.error('Errore nel caricamento del file JSON:', error));
+                initializeAutoComplete();
+            } catch (error) {
+                console.error('Errore nel caricamento del file JSON:', error);
+            }
+        }
 
-        // Funzione per visualizzare gli strain
-        function displayStrains(strains) {
+        // Visualizza gli strain
+        function displayStrains(strainsToDisplay) {
             const strainList = document.getElementById('strainList');
             strainList.innerHTML = '';
 
-            strains.forEach(strain => {
+            strainsToDisplay.forEach(strain => {
                 const strainElement = document.createElement('div');
                 strainElement.className = 'strain';
                 strainElement.innerHTML = `
@@ -111,23 +117,53 @@
             });
         }
 
-        // Funzione per filtrare gli strain in base alla ricerca
-        function filterStrains() {
-            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
-            const filteredStrains = strains.filter(strain =>
-                strain.name.toLowerCase().includes(searchTerm)
-            );
-            displayStrains(filteredStrains);
+        // Inizializza autoComplete.js
+        function initializeAutoComplete() {
+            new autoComplete({
+                selector: "#searchBox",
+                data: {
+                    src: strains.map(strain => strain.name),
+                    cache: true
+                },
+                resultItem: {
+                    highlight: true
+                },
+                events: {
+                    input: {
+                        selection(event) {
+                            const selection = event.detail.selection.value;
+                            document.querySelector("#searchBox").value = selection;
+                            filterStrains();
+                        }
+                    }
+                }
+            });
         }
 
-        // Funzione per resettare la ricerca
+        // Filtro con Fuse.js
+        const fuse = new Fuse(strains, {
+            keys: ["name", "type", "description"],
+            threshold: 0.3
+        });
+
+        function filterStrains() {
+            const searchTerm = document.getElementById('searchBox').value;
+            const results = fuse.search(searchTerm).map(result => result.item);
+            displayStrains(results.length ? results : strains);
+        }
+
+        // Resetta la ricerca
         function resetSearch() {
             document.getElementById('searchBox').value = '';
             displayStrains(strains);
         }
+
+        // Carica gli strain all'avvio
+        loadStrains();
     </script>
 </body>
 </html>
+
 
 
 
