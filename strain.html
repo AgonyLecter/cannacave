@@ -30,10 +30,17 @@
             max-width: 600px;
         }
 
+        .search-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         #searchBox {
             width: 90%;
             max-width: 400px;
-            padding: 15px;
+            padding: 15px 40px 15px 15px; /* Spazio aggiuntivo per la lente */
             margin-top: 15px;
             border-radius: 30px;
             border: none;
@@ -47,6 +54,14 @@
         #searchBox::placeholder {
             color: #81c784;
             opacity: 0.7;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            color: #81c784; /* Cambia il colore della lente */
+            font-size: 1.2rem;
+            pointer-events: none; /* Non cliccabile */
         }
 
         #content {
@@ -134,7 +149,10 @@
 <body>
     <header>
         <h1>CannaCave WikiWeed</h1>
-        <input type="text" id="searchBox" placeholder="Cerca strain..." oninput="filterStrains()">
+        <div class="search-container">
+            <input type="text" id="searchBox" placeholder="Cerca strain..." oninput="filterStrains()">
+            <span class="search-icon">&#128269;</span> <!-- Icona della lente -->
+        </div>
         <button class="reset-button" onclick="resetSearch()">Reset Ricerca</button>
     </header>
     <main id="content">
@@ -211,8 +229,8 @@
             }
 
             const fuse = new Fuse(strains, {
-                keys: ["name", "type", "description"],
-                threshold: 0.3
+                keys: ["name", "type"],
+                threshold: 0.4, // Ottimizzazione della ricerca
             });
             const results = fuse.search(searchTerm).map(result => result.item);
             displayStrains(results.length ? results : strains);
@@ -229,10 +247,6 @@
     </script>
 </body>
 </html>
-
-
-
-
 
 
 
