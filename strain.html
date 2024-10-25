@@ -221,20 +221,23 @@
         }
 
         // Filtro con Fuse.js
-        function filterStrains() {
-            const searchTerm = document.getElementById('searchBox').value;
-            if (!searchTerm) {
-                displayStrains(strains);
-                return;
-            }
+ function filterStrains() {
+    const searchTerm = document.getElementById('searchBox').value.toLowerCase().trim();
+    if (!searchTerm) {
+        displayStrains(strains);
+        return;
+    }
 
-            const fuse = new Fuse(strains, {
-                keys: ["name", "type"],
-                threshold: 0.4, // Ottimizzazione della ricerca
-            });
-            const results = fuse.search(searchTerm).map(result => result.item);
-            displayStrains(results.length ? results : strains);
-        }
+    const fuse = new Fuse(strains, {
+        keys: ["name", "type"],
+        threshold: 0.4, // Più tollerante
+        ignoreLocation: true // Ignora la posizione dell'incontro nel testo
+    });
+
+    const results = fuse.search(searchTerm).map(result => result.item);
+    displayStrains(results.length ? results : strains);
+}
+
 
         // Resetta la ricerca
         function resetSearch() {
