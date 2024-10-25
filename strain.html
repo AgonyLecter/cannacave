@@ -8,66 +8,114 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #e8f5e9;
-            color: #2e7d32;
+            background-color: #000;
+            color: #81c784;
             margin: 0;
             padding: 0;
         }
 
         header {
             text-align: center;
-            padding: 20px;
+            padding: 20px 10px;
             background-color: #1b5e20;
-            color: white;
+            color: #81c784;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         }
 
         #searchBox {
-            width: 90%;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 5px;
-            border: 1px solid #4caf50;
+            width: calc(100% - 30px);
+            max-width: 400px;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 30px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background-color: #333;
+            color: #81c784;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        #searchBox::placeholder {
+            color: #81c784;
+            opacity: 0.7;
         }
 
         #content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
             padding: 20px;
+            max-width: 100%;
         }
 
         .strain {
-            background-color: white;
+            background-color: #111;
             border: 1px solid #4caf50;
-            border-radius: 5px;
+            border-radius: 15px;
             margin: 10px;
             padding: 20px;
-            width: 300px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .strain:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
         }
 
         .strain img {
             max-width: 100%;
             height: auto;
-            border-radius: 5px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #66bb6a;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #cfcfcf;
         }
 
         .reset-button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #2e7d32;
-            color: white;
+            margin-top: 15px;
+            padding: 12px 25px;
+            background-color: #66bb6a;
+            color: #000;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         .reset-button:hover {
-            background-color: #1b5e20;
+            background-color: #4caf50;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 15px 5px;
+            }
+
+            #searchBox {
+                width: calc(100% - 20px);
+                margin-top: 10px;
+            }
+
+            .strain {
+                width: 100%;
+                margin: 5px;
+            }
         }
     </style>
 </head>
@@ -169,6 +217,7 @@
     </script>
 </body>
 </html>
+
 
 
 
