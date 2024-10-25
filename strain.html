@@ -122,7 +122,9 @@
             new autoComplete({
                 selector: "#searchBox",
                 data: {
-                    src: strains.map(strain => strain.name),
+                    src: async () => {
+                        return strains.map(strain => strain.name);
+                    },
                     cache: true
                 },
                 resultItem: {
@@ -141,13 +143,17 @@
         }
 
         // Filtro con Fuse.js
-        const fuse = new Fuse(strains, {
-            keys: ["name", "type", "description"],
-            threshold: 0.3
-        });
-
         function filterStrains() {
             const searchTerm = document.getElementById('searchBox').value;
+            if (!searchTerm) {
+                displayStrains(strains);
+                return;
+            }
+
+            const fuse = new Fuse(strains, {
+                keys: ["name", "type", "description"],
+                threshold: 0.3
+            });
             const results = fuse.search(searchTerm).map(result => result.item);
             displayStrains(results.length ? results : strains);
         }
@@ -163,6 +169,7 @@
     </script>
 </body>
 </html>
+
 
 
 
